@@ -71,7 +71,7 @@ public class TermFragment extends Fragment {
 
         materialToolbar = view.findViewById(R.id.toolbar_term);
 
-        materialToolbar.setTitle("Список терминов");
+        materialToolbar.setTitle(getString(R.string.terms));
         materialToolbar.setBackgroundColor(getResources().getColor(R.color.hse_purple));
         materialToolbar.setTitleTextColor(getResources().getColor(R.color.white));
     }

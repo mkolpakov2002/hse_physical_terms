@@ -97,7 +97,7 @@ public class FormulaFragment extends Fragment implements FormulaAdapter.ItemClic
 
         materialToolbar = view.findViewById(R.id.toolbar_form);
 
-        materialToolbar.setTitle("Список формул");
+        materialToolbar.setTitle(getString(R.string.formulas));
         materialToolbar.setBackgroundColor(getResources().getColor(R.color.hse_purple));
         materialToolbar.setTitleTextColor(getResources().getColor(R.color.white));
 

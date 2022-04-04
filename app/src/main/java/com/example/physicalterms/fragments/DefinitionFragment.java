@@ -96,7 +96,7 @@ public class DefinitionFragment extends Fragment implements DefinitionAdapter.It
 
         materialToolbar = view.findViewById(R.id.toolbar_def);
 
-        materialToolbar.setTitle("Список определений");
+        materialToolbar.setTitle(getString(R.string.definitions));
         materialToolbar.setBackgroundColor(getResources().getColor(R.color.hse_purple));
         materialToolbar.setTitleTextColor(getResources().getColor(R.color.white));
 

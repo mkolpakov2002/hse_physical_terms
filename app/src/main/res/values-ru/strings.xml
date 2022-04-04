@@ -5,4 +5,13 @@
     <string name="select_language_for_learning">Select language for learning</string>
     <string name="select_your_main_language">Select your main language</string>
     <string name="welcome_to_hse_physical_terms_learning_app">Welcome to HSE Physical Terms learning app</string>
+    <string name="formula_list">Список формул</string>
+    <string name="task_list">Список заданий</string>
+    <string name="term_list">Список терминов</string>
+    <string name="definition_list">Список определений</string>
+    <string name="main">Главная</string>
+    <string name="terms">Термины</string>
+    <string name="tasks">Задания</string>
+    <string name="formulas">Формулы</string>
+    <string name="definitions">Определения</string>
 </resources>

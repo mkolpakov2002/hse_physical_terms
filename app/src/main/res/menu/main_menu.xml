@@ -4,35 +4,35 @@
     <item
         android:id="@+id/mainFragment"
         android:orderInCategory="100"
-        android:title="Главная"
+        android:title="@string/main"
         app:showAsAction="always"
         android:icon="@drawable/home"/>
 
     <item
         android:id="@+id/termFragment"
         android:orderInCategory="100"
-        android:title="Термины"
+        android:title="@string/terms"
         app:showAsAction="always"
         android:icon="@drawable/book"/>
 
     <item
         android:id="@+id/taskFragment"
         android:orderInCategory="100"
-        android:title="Задания"
+        android:title="@string/tasks"
         app:showAsAction="always"
         android:icon="@drawable/clipboard"/>
 
     <item
         android:id="@+id/formulaFragment"
         android:orderInCategory="100"
-        android:title="Формулы"
+        android:title="@string/formulas"
         app:showAsAction="always"
         android:icon="@drawable/formula"/>
 
     <item
         android:id="@+id/definitionFragment"
         android:orderInCategory="100"
-        android:title="Определения"
+        android:title="@string/definitions"
         app:showAsAction="always"
         android:icon="@drawable/research"/>
 

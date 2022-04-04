@@ -24,6 +24,7 @@ import android.widget.ViewSwitcher;
 
 import com.example.physicalterms.R;
 import com.google.android.material.appbar.MaterialToolbar;
+import com.google.android.material.button.MaterialButton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,7 +68,7 @@ public class MainFragment extends Fragment {
 
         materialToolbar = view.findViewById(R.id.toolbar_mf);
 
-        materialToolbar.setTitle("Глоссарий по физике");
+        materialToolbar.setTitle(getString(R.string.app_name));
         materialToolbar.setBackgroundColor(getResources().getColor(R.color.hse_purple));
         materialToolbar.setTitleTextColor(getResources().getColor(R.color.white));
 

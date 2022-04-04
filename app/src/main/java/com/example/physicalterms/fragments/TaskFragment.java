@@ -98,7 +98,7 @@ public class TaskFragment extends Fragment implements TaskAdapter.ItemClickListe
 
         materialToolbar = view.findViewById(R.id.toolbar_task);
 
-        materialToolbar.setTitle("Список заданий");
+        materialToolbar.setTitle(getString(R.string.tasks));
         materialToolbar.setBackgroundColor(getResources().getColor(R.color.hse_purple));
         materialToolbar.setTitleTextColor(getResources().getColor(R.color.white));
 

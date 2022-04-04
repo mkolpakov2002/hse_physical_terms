@@ -28,6 +28,7 @@ public class MainActivity extends AppCompatActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        App.setLocale(this);
         setContentView(R.layout.activity_main);
 
         setUpNavigation();

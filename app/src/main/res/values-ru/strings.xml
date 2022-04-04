@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Глоссарий по физике</string>
+    <string name="greeting_title">Привет! &#128400;</string>
+    <string name="select_language_for_learning">Select language for learning</string>
+    <string name="select_your_main_language">Select your main language</string>
+    <string name="welcome_to_hse_physical_terms_learning_app">Welcome to HSE Physical Terms learning app</string>
+</resources>

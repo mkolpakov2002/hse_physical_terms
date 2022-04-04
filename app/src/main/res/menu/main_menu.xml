@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/mainFragment"
+        android:orderInCategory="100"
+        android:title="Главная"
+        app:showAsAction="always"
+        android:icon="@drawable/home"/>
+
+    <item
+        android:id="@+id/termFragment"
+        android:orderInCategory="100"
+        android:title="Термины"
+        app:showAsAction="always"
+        android:icon="@drawable/book"/>
+
+    <item
+        android:id="@+id/taskFragment"
+        android:orderInCategory="100"
+        android:title="Задания"
+        app:showAsAction="always"
+        android:icon="@drawable/clipboard"/>
+
+    <item
+        android:id="@+id/formulaFragment"
+        android:orderInCategory="100"
+        android:title="Формулы"
+        app:showAsAction="always"
+        android:icon="@drawable/formula"/>
+
+    <item
+        android:id="@+id/definitionFragment"
+        android:orderInCategory="100"
+        android:title="Определения"
+        app:showAsAction="always"
+        android:icon="@drawable/research"/>
+
+</menu>

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".WelcomeActivity">
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/learningLanguageButton2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Select language for learning"
+        app:icon="@drawable/ic_baseline_language_24"
+        app:layout_constraintBottom_toTopOf="@+id/mainLanguageButton2"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginBottom="8dp"
+        android:layout_marginStart="16dp"/>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/mainLanguageButton2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Select your main language"
+        app:icon="@drawable/ic_baseline_language_24"
+        app:layout_constraintBottom_toTopOf="@+id/getStartedButton"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginBottom="16dp"
+        android:layout_marginStart="16dp"/>
+
+    <Button
+        android:id="@+id/getStartedButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Get Started"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <TextView
+        android:id="@+id/textView"
+        style="@style/TextAppearance.Material3.TitleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:text="Welcome to HSE Physical Terms learning app"
+        android:textSize="32sp"
+        app:layout_constraintBottom_toTopOf="@+id/learningLanguageButton2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/textView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/hse_logo"
+        app:layout_constraintDimensionRatio="1"/>
+</androidx.constraintlayout.widget.ConstraintLayout>

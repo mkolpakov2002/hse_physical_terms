@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigation_scheme"
+    app:startDestination="@id/mainFragment">
+
+    <fragment
+        android:id="@+id/mainFragment"
+        android:name="com.example.physicalterms.fragments.MainFragment"
+        android:label="fragment_main"
+        tools:layout="@layout/fragment_main" >
+        <action
+            android:id="@+id/action_mainFragment_to_termFragment"
+            app:destination="@id/termFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_taskFragment"
+            app:destination="@id/taskFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_definitionFragment"
+            app:destination="@id/definitionFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_formulaFragment"
+            app:destination="@id/formulaFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/termFragment"
+        android:name="com.example.physicalterms.fragments.TermFragment"
+        android:label="fragment_term"
+        tools:layout="@layout/fragment_term" >
+        <action
+            android:id="@+id/action_termFragment_to_formulaFragment"
+            app:destination="@id/formulaFragment" />
+        <action
+            android:id="@+id/action_termFragment_to_mainFragment"
+            app:destination="@id/mainFragment" />
+        <action
+            android:id="@+id/action_termFragment_to_taskFragment"
+            app:destination="@id/taskFragment" />
+        <action
+            android:id="@+id/action_termFragment_to_definitionFragment"
+            app:destination="@id/definitionFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/taskFragment"
+        android:name="com.example.physicalterms.fragments.TaskFragment"
+        android:label="fragment_task"
+        tools:layout="@layout/fragment_task" >
+        <action
+            android:id="@+id/action_taskFragment_to_termFragment"
+            app:destination="@id/termFragment" />
+        <action
+            android:id="@+id/action_taskFragment_to_formulaFragment"
+            app:destination="@id/formulaFragment" />
+        <action
+            android:id="@+id/action_taskFragment_to_definitionFragment"
+            app:destination="@id/definitionFragment" />
+        <action
+            android:id="@+id/action_taskFragment_to_mainFragment"
+            app:destination="@id/mainFragment" />
+        <action
+            android:id="@+id/action_taskFragment_to_termFragment2"
+            app:destination="@id/termFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/formulaFragment"
+        android:name="com.example.physicalterms.fragments.FormulaFragment"
+        android:label="fragment_formula"
+        tools:layout="@layout/fragment_formula" >
+        <action
+            android:id="@+id/action_formulaFragment_to_termFragment"
+            app:destination="@id/termFragment" />
+        <action
+            android:id="@+id/action_formulaFragment_to_mainFragment"
+            app:destination="@id/mainFragment" />
+        <action
+            android:id="@+id/action_formulaFragment_to_taskFragment"
+            app:destination="@id/taskFragment" />
+        <action
+            android:id="@+id/action_formulaFragment_to_definitionFragment"
+            app:destination="@id/definitionFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/definitionFragment"
+        android:name="com.example.physicalterms.fragments.DefinitionFragment"
+        android:label="fragment_definition"
+        tools:layout="@layout/fragment_definition" >
+        <action
+            android:id="@+id/action_definitionFragment_to_taskFragment"
+            app:destination="@id/taskFragment" />
+        <action
+            android:id="@+id/action_definitionFragment_to_formulaFragment"
+            app:destination="@id/formulaFragment" />
+        <action
+            android:id="@+id/action_definitionFragment_to_termFragment"
+            app:destination="@id/termFragment" />
+        <action
+            android:id="@+id/action_definitionFragment_to_mainFragment"
+            app:destination="@id/mainFragment" />
+    </fragment>
+</navigation>

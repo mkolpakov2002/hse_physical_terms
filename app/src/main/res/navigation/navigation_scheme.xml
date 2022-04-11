@@ -40,6 +40,9 @@
         <action
             android:id="@+id/action_termFragment_to_definitionFragment"
             app:destination="@id/definitionFragment" />
+        <action
+            android:id="@+id/action_termFragment_to_dialogCardFragment"
+            app:destination="@id/dialogCardFragment" />
     </fragment>
     <fragment
         android:id="@+id/taskFragment"
@@ -61,6 +64,9 @@
         <action
             android:id="@+id/action_taskFragment_to_termFragment2"
             app:destination="@id/termFragment" />
+        <action
+            android:id="@+id/action_taskFragment_to_dialogCardFragment"
+            app:destination="@id/dialogCardFragment" />
     </fragment>
     <fragment
         android:id="@+id/formulaFragment"
@@ -79,6 +85,9 @@
         <action
             android:id="@+id/action_formulaFragment_to_definitionFragment"
             app:destination="@id/definitionFragment" />
+        <action
+            android:id="@+id/action_formulaFragment_to_dialogCardFragment"
+            app:destination="@id/dialogCardFragment" />
     </fragment>
     <fragment
         android:id="@+id/definitionFragment"
@@ -97,5 +106,25 @@
         <action
             android:id="@+id/action_definitionFragment_to_mainFragment"
             app:destination="@id/mainFragment" />
+        <action
+            android:id="@+id/action_definitionFragment_to_dialogCardFragment"
+            app:destination="@id/dialogCardFragment" />
     </fragment>
+    <dialog
+        android:id="@+id/dialogCardFragment"
+        android:name="com.example.physicalterms.DialogCardFragment"
+        android:label="DialogCardFragment" >
+        <action
+            android:id="@+id/action_dialogCardFragment_to_termFragment"
+            app:destination="@id/termFragment" />
+        <action
+            android:id="@+id/action_dialogCardFragment_to_formulaFragment"
+            app:destination="@id/formulaFragment" />
+        <action
+            android:id="@+id/action_dialogCardFragment_to_taskFragment"
+            app:destination="@id/taskFragment" />
+        <action
+            android:id="@+id/action_dialogCardFragment_to_definitionFragment"
+            app:destination="@id/definitionFragment" />
+    </dialog>
 </navigation>

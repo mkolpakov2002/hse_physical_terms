@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Physical terms</string>
+    <string name="definitions">定義</string>
+    <string name="formulas">公式</string>
+    <string name="tasks">タスク</string>
+    <string name="terms">利用規約</string>
+    <string name="main">メイン</string>
+    <string name="term_list">用語一覧</string>
+    <string name="task_list">タスクリスト</string>
+    <string name="formula_list">数式リスト</string>
+    <string name="definition_list">定義リスト</string>
+    <string name="welcome_to_hse_physical_terms_learning_app">HSE物理用語学習アプリへようこそ</string>
+    <string name="select_your_main_language">あなたの主な言語を選択してください</string>
+    <string name="select_language_for_learning">学習のための言語を選択します。</string>
+    <string name="greeting_title">こんにちは! &#128400;</string>
+    <string name="connection_error">接続エラー、後で試してみてください。..</string>
+</resources>

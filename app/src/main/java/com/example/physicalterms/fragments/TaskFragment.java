@@ -6,6 +6,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -18,13 +19,11 @@ import android.view.ViewGroup;
 import com.example.physicalterms.ApiService;
 import com.example.physicalterms.App;
 import com.example.physicalterms.R;
-import com.example.physicalterms.adapters.DefinitionAdapter;
 import com.example.physicalterms.adapters.TaskAdapter;
-import com.example.physicalterms.api.DefinitionRow;
-import com.example.physicalterms.api.DefinitionType;
+import com.example.physicalterms.api.FormulaRow;
 import com.example.physicalterms.api.TaskRow;
-import com.example.physicalterms.api.TaskType;
 import com.google.android.material.appbar.MaterialToolbar;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -112,7 +111,7 @@ public class TaskFragment extends Fragment implements TaskAdapter.ItemClickListe
                 downloadData();
             }
             adapter = new TaskAdapter(requireContext(), result);
-            adapter.setClickListener(this::onItemClick);
+            adapter.setClickListener(this);
             definitionList.setAdapter(adapter);
         }
 
@@ -122,23 +121,35 @@ public class TaskFragment extends Fragment implements TaskAdapter.ItemClickListe
     void downloadData(){
         ApiService apiService = App.getApiService();
 
-        Call<TaskType> call = apiService.getTaskList();
-        call.enqueue(new Callback<TaskType>() {
+        Call<List<TaskRow>> call = apiService.getTaskList();
+        call.enqueue(new Callback<List<TaskRow>>() {
             @Override
-            public void onResponse(@NonNull Call<TaskType> call, @NonNull Response<TaskType> response) {
+            public void onResponse(@NonNull Call<List<TaskRow>> call, @NonNull Response<List<TaskRow>> response) {
                 if (response.body() != null) {
-                    result = response.body().getRows();
+                    result = response.body();
                     adapter.setData(result);
+                    App.getDatabase().getTaskRowDao().deleteAll();
+                    App.getDatabase().getTaskRowDao().insertAll(result);
                 } else {
                     String s = "No objects";
                     Log.d(TAG, s);
+                    List<TaskRow> saved = App.getDatabase().getTaskRowDao().getAll();
+                    if(saved.size()>0){
+                        adapter.setData(saved);
+                    }
+                    showSnackBar(getString(R.string.connection_error));
                 }
                 swipeRefreshLayout.setRefreshing(false);
             }
 
             @Override
-            public void onFailure(@NonNull Call<TaskType> call, @NonNull Throwable t) {
+            public void onFailure(@NonNull Call<List<TaskRow>> call, @NonNull Throwable t) {
                 Log.e(TAG, t.toString());
+                List<TaskRow> saved = App.getDatabase().getTaskRowDao().getAll();
+                if(saved.size()>0){
+                    adapter.setData(saved);
+                }
+                showSnackBar(getString(R.string.connection_error));
                 swipeRefreshLayout.setRefreshing(false);
             }
         });
@@ -155,7 +166,19 @@ public class TaskFragment extends Fragment implements TaskAdapter.ItemClickListe
 
 
     @Override
-    public void onItemClick(View view, int position) {
-        //
+    public void onItemClick(View view) {
+        Navigation.findNavController(view).navigate(R.id.dialogCardFragment);
     }
+
+    private void showSnackBar(String message){
+        Snackbar.make(swipeRefreshLayout, message, Snackbar.LENGTH_LONG)
+                .setAction("OK", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        //nothing
+                    }
+                })
+                .show();
+    }
+
 }

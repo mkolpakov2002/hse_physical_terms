@@ -1,39 +1,45 @@
 package com.example.physicalterms.api;
 
-import javax.annotation.Generated;
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
+        import androidx.room.Entity;
+        import androidx.room.Ignore;
+        import androidx.room.PrimaryKey;
 
+        import javax.annotation.Generated;
+        import com.google.gson.annotations.Expose;
+        import com.google.gson.annotations.SerializedName;
+
+@Entity(tableName = "formulas")
 @Generated("jsonschema2pojo")
 public class FormulaRow {
 
+    @PrimaryKey
     @SerializedName("id")
     @Expose
     private Integer id;
-    @SerializedName("name")
-    @Expose
-    private String name;
     @SerializedName("name_rus")
     @Expose
     private String nameRus;
+    @SerializedName("name_lang")
+    @Expose
+    private String nameLang;
     @SerializedName("value")
     @Expose
     private String value;
+    @SerializedName("comment_rus")
+    @Expose
+    private String commentRus;
+    @SerializedName("comment_lang")
+    @Expose
+    private String commentLang;
     @SerializedName("language")
     @Expose
     private String language;
-    @SerializedName("comment")
-    @Expose
-    private String comment;
     @SerializedName("section")
     @Expose
     private String section;
-    @SerializedName("createdAt")
-    @Expose
-    private String createdAt;
-    @SerializedName("updatedAt")
-    @Expose
-    private String updatedAt;
+
+    @Ignore
+    boolean isExpanded = false;
 
     /**
      * No args constructor for use in serialization
@@ -44,27 +50,25 @@ public class FormulaRow {
 
     /**
      *
-     * @param createdAt
+     * @param commentLang
+     * @param commentRus
      * @param nameRus
-     * @param name
+     * @param nameLang
      * @param language
-     * @param comment
      * @param section
      * @param id
      * @param value
-     * @param updatedAt
      */
-    public FormulaRow(Integer id, String name, String nameRus, String value, String language, String comment, String section, String createdAt, String updatedAt) {
+    public FormulaRow(Integer id, String nameRus, String nameLang, String value, String commentRus, String commentLang, String language, String section) {
         super();
         this.id = id;
-        this.name = name;
         this.nameRus = nameRus;
+        this.nameLang = nameLang;
         this.value = value;
+        this.commentRus = commentRus;
+        this.commentLang = commentLang;
         this.language = language;
-        this.comment = comment;
         this.section = section;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
     }
 
     public Integer getId() {
@@ -75,12 +79,9 @@ public class FormulaRow {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
+    public FormulaRow withId(Integer id) {
+        this.id = id;
+        return this;
     }
 
     public String getNameRus() {
@@ -91,12 +92,61 @@ public class FormulaRow {
         this.nameRus = nameRus;
     }
 
+    public FormulaRow withNameRus(String nameRus) {
+        this.nameRus = nameRus;
+        return this;
+    }
+
+    public String getNameLang() {
+        return nameLang;
+    }
+
+    public void setNameLang(String nameLang) {
+        this.nameLang = nameLang;
+    }
+
+    public FormulaRow withNameLang(String nameLang) {
+        this.nameLang = nameLang;
+        return this;
+    }
+
     public String getValue() {
         return value;
     }
 
     public void setValue(String value) {
         this.value = value;
+    }
+
+    public FormulaRow withValue(String value) {
+        this.value = value;
+        return this;
+    }
+
+    public String getCommentRus() {
+        return commentRus;
+    }
+
+    public void setCommentRus(String commentRus) {
+        this.commentRus = commentRus;
+    }
+
+    public FormulaRow withCommentRus(String commentRus) {
+        this.commentRus = commentRus;
+        return this;
+    }
+
+    public String getCommentLang() {
+        return commentLang;
+    }
+
+    public void setCommentLang(String commentLang) {
+        this.commentLang = commentLang;
+    }
+
+    public FormulaRow withCommentLang(String commentLang) {
+        this.commentLang = commentLang;
+        return this;
     }
 
     public String getLanguage() {
@@ -107,12 +157,9 @@ public class FormulaRow {
         this.language = language;
     }
 
-    public String getComment() {
-        return comment;
-    }
-
-    public void setComment(String comment) {
-        this.comment = comment;
+    public FormulaRow withLanguage(String language) {
+        this.language = language;
+        return this;
     }
 
     public String getSection() {
@@ -123,20 +170,17 @@ public class FormulaRow {
         this.section = section;
     }
 
-    public String getCreatedAt() {
-        return createdAt;
+    public FormulaRow withSection(String section) {
+        this.section = section;
+        return this;
     }
 
-    public void setCreatedAt(String createdAt) {
-        this.createdAt = createdAt;
+    public boolean isExpanded() {
+        return isExpanded;
     }
 
-    public String getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(String updatedAt) {
-        this.updatedAt = updatedAt;
+    public void setExpanded(boolean expanded) {
+        isExpanded = expanded;
     }
 
     @Override
@@ -147,37 +191,33 @@ public class FormulaRow {
         sb.append('=');
         sb.append(((this.id == null)?"<null>":this.id));
         sb.append(',');
-        sb.append("name");
-        sb.append('=');
-        sb.append(((this.name == null)?"<null>":this.name));
-        sb.append(',');
         sb.append("nameRus");
         sb.append('=');
         sb.append(((this.nameRus == null)?"<null>":this.nameRus));
+        sb.append(',');
+        sb.append("nameLang");
+        sb.append('=');
+        sb.append(((this.nameLang == null)?"<null>":this.nameLang));
         sb.append(',');
         sb.append("value");
         sb.append('=');
         sb.append(((this.value == null)?"<null>":this.value));
         sb.append(',');
+        sb.append("commentRus");
+        sb.append('=');
+        sb.append(((this.commentRus == null)?"<null>":this.commentRus));
+        sb.append(',');
+        sb.append("commentLang");
+        sb.append('=');
+        sb.append(((this.commentLang == null)?"<null>":this.commentLang));
+        sb.append(',');
         sb.append("language");
         sb.append('=');
         sb.append(((this.language == null)?"<null>":this.language));
         sb.append(',');
-        sb.append("comment");
-        sb.append('=');
-        sb.append(((this.comment == null)?"<null>":this.comment));
-        sb.append(',');
         sb.append("section");
         sb.append('=');
         sb.append(((this.section == null)?"<null>":this.section));
-        sb.append(',');
-        sb.append("createdAt");
-        sb.append('=');
-        sb.append(((this.createdAt == null)?"<null>":this.createdAt));
-        sb.append(',');
-        sb.append("updatedAt");
-        sb.append('=');
-        sb.append(((this.updatedAt == null)?"<null>":this.updatedAt));
         sb.append(',');
         if (sb.charAt((sb.length()- 1)) == ',') {
             sb.setCharAt((sb.length()- 1), ']');
@@ -190,15 +230,14 @@ public class FormulaRow {
     @Override
     public int hashCode() {
         int result = 1;
-        result = ((result* 31)+((this.createdAt == null)? 0 :this.createdAt.hashCode()));
+        result = ((result* 31)+((this.commentLang == null)? 0 :this.commentLang.hashCode()));
+        result = ((result* 31)+((this.commentRus == null)? 0 :this.commentRus.hashCode()));
         result = ((result* 31)+((this.nameRus == null)? 0 :this.nameRus.hashCode()));
-        result = ((result* 31)+((this.name == null)? 0 :this.name.hashCode()));
+        result = ((result* 31)+((this.nameLang == null)? 0 :this.nameLang.hashCode()));
         result = ((result* 31)+((this.language == null)? 0 :this.language.hashCode()));
-        result = ((result* 31)+((this.comment == null)? 0 :this.comment.hashCode()));
         result = ((result* 31)+((this.section == null)? 0 :this.section.hashCode()));
         result = ((result* 31)+((this.id == null)? 0 :this.id.hashCode()));
         result = ((result* 31)+((this.value == null)? 0 :this.value.hashCode()));
-        result = ((result* 31)+((this.updatedAt == null)? 0 :this.updatedAt.hashCode()));
         return result;
     }
 
@@ -211,7 +250,7 @@ public class FormulaRow {
             return false;
         }
         FormulaRow rhs = ((FormulaRow) other);
-        return ((((((((((this.createdAt == rhs.createdAt)||((this.createdAt!= null)&&this.createdAt.equals(rhs.createdAt)))&&((this.nameRus == rhs.nameRus)||((this.nameRus!= null)&&this.nameRus.equals(rhs.nameRus))))&&((this.name == rhs.name)||((this.name!= null)&&this.name.equals(rhs.name))))&&((this.language == rhs.language)||((this.language!= null)&&this.language.equals(rhs.language))))&&((this.comment == rhs.comment)||((this.comment!= null)&&this.comment.equals(rhs.comment))))&&((this.section == rhs.section)||((this.section!= null)&&this.section.equals(rhs.section))))&&((this.id == rhs.id)||((this.id!= null)&&this.id.equals(rhs.id))))&&((this.value == rhs.value)||((this.value!= null)&&this.value.equals(rhs.value))))&&((this.updatedAt == rhs.updatedAt)||((this.updatedAt!= null)&&this.updatedAt.equals(rhs.updatedAt))));
+        return (((((((((this.commentLang == rhs.commentLang)||((this.commentLang!= null)&&this.commentLang.equals(rhs.commentLang)))&&((this.commentRus == rhs.commentRus)||((this.commentRus!= null)&&this.commentRus.equals(rhs.commentRus))))&&((this.nameRus == rhs.nameRus)||((this.nameRus!= null)&&this.nameRus.equals(rhs.nameRus))))&&((this.nameLang == rhs.nameLang)||((this.nameLang!= null)&&this.nameLang.equals(rhs.nameLang))))&&((this.language == rhs.language)||((this.language!= null)&&this.language.equals(rhs.language))))&&((this.section == rhs.section)||((this.section!= null)&&this.section.equals(rhs.section))))&&((this.id == rhs.id)||((this.id!= null)&&this.id.equals(rhs.id))))&&((this.value == rhs.value)||((this.value!= null)&&this.value.equals(rhs.value))));
     }
 
 }

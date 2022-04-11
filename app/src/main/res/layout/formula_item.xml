@@ -3,20 +3,22 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:auto="http://schemas.android.com/tools"
     android:layout_margin="6dp"
     app:cardCornerRadius="16dp"
-    app:cardElevation="0dp">
+    app:cardElevation="8dp"
+    android:animateLayoutChanges="true">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_margin="8dp">
 
 
         <TextView
             android:id="@+id/formulaItemNameText"
             style="@style/TextAppearance.Material3.TitleMedium"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="formulaName"
             app:layout_constraintEnd_toEndOf="parent"
@@ -26,29 +28,44 @@
         <TextView
             android:id="@+id/formulaItemNameRusText"
             style="@style/TextAppearance.Material3.TitleSmall"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="formulaNameRus"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/formulaItemNameText" />
 
-        <TextView
+        <com.daquexian.flexiblerichtextview.FlexibleRichTextView
             android:id="@+id/formulaItemValueText"
-            style="@style/TextAppearance.Material3.LabelLarge"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="value"
+            android:layout_gravity="center"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/formulaItemNameRusText" />
 
-        <TextView
+        <com.daquexian.flexiblerichtextview.FlexibleRichTextView
             android:id="@+id/formulaItemCommentText"
-            style="@style/TextAppearance.Material3.LabelLarge"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_gravity="start"
             android:text="comment"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/formulaItemValueText" />
+
+        <com.daquexian.flexiblerichtextview.FlexibleRichTextView
+            android:id="@+id/formulaItemCommentRusText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:text="commentRus"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/formulaItemCommentText" />
 
         <TextView
             android:id="@+id/formulaItemSectionText"
@@ -56,8 +73,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="section"
+            android:visibility="gone"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/formulaItemCommentText" />
+            app:layout_constraintTop_toBottomOf="@+id/formulaItemCommentRusText" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </com.google.android.material.card.MaterialCardView>

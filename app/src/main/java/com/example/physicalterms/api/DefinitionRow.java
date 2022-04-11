@@ -1,45 +1,42 @@
 package com.example.physicalterms.api;
 
-import static com.example.physicalterms.Constants.definitionType;
-
-import android.view.View;
-import android.widget.TextView;
-
-import androidx.annotation.NonNull;
+import androidx.room.Entity;
+import androidx.room.Ignore;
+import androidx.room.PrimaryKey;
 
 import javax.annotation.Generated;
-
-import com.example.physicalterms.R;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+@Entity(tableName = "definitions")
 @Generated("jsonschema2pojo")
 public class DefinitionRow {
 
+    @PrimaryKey
     @SerializedName("id")
     @Expose
     private Integer id;
-    @SerializedName("name")
-    @Expose
-    private String name;
     @SerializedName("name_rus")
     @Expose
     private String nameRus;
-    @SerializedName("body")
+    @SerializedName("name_lang")
     @Expose
-    private String body;
-    @SerializedName("body_rus")
+    private String nameLang;
+    @SerializedName("value_rus")
     @Expose
-    private String bodyRus;
+    private String valueRus;
+    @SerializedName("value_lang")
+    @Expose
+    private String valueLang;
     @SerializedName("language")
     @Expose
     private String language;
-    @SerializedName("createdAt")
+    @SerializedName("section")
     @Expose
-    private String createdAt;
-    @SerializedName("updatedAt")
-    @Expose
-    private String updatedAt;
+    private String section;
+
+    @Ignore
+    boolean isExpanded = false;
 
     /**
      * No args constructor for use in serialization
@@ -50,25 +47,23 @@ public class DefinitionRow {
 
     /**
      *
-     * @param createdAt
      * @param nameRus
-     * @param name
-     * @param bodyRus
+     * @param valueLang
+     * @param nameLang
      * @param language
+     * @param section
      * @param id
-     * @param body
-     * @param updatedAt
+     * @param valueRus
      */
-    public DefinitionRow(Integer id, String name, String nameRus, String body, String bodyRus, String language, String createdAt, String updatedAt) {
+    public DefinitionRow(Integer id, String nameRus, String nameLang, String valueRus, String valueLang, String language, String section) {
         super();
         this.id = id;
-        this.name = name;
         this.nameRus = nameRus;
-        this.body = body;
-        this.bodyRus = bodyRus;
+        this.nameLang = nameLang;
+        this.valueRus = valueRus;
+        this.valueLang = valueLang;
         this.language = language;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
+        this.section = section;
     }
 
     public Integer getId() {
@@ -79,12 +74,9 @@ public class DefinitionRow {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
+    public DefinitionRow withId(Integer id) {
+        this.id = id;
+        return this;
     }
 
     public String getNameRus() {
@@ -95,20 +87,48 @@ public class DefinitionRow {
         this.nameRus = nameRus;
     }
 
-    public String getBody() {
-        return body;
+    public DefinitionRow withNameRus(String nameRus) {
+        this.nameRus = nameRus;
+        return this;
     }
 
-    public void setBody(String body) {
-        this.body = body;
+    public String getNameLang() {
+        return nameLang;
     }
 
-    public String getBodyRus() {
-        return bodyRus;
+    public void setNameLang(String nameLang) {
+        this.nameLang = nameLang;
     }
 
-    public void setBodyRus(String bodyRus) {
-        this.bodyRus = bodyRus;
+    public DefinitionRow withNameLang(String nameLang) {
+        this.nameLang = nameLang;
+        return this;
+    }
+
+    public String getValueRus() {
+        return valueRus;
+    }
+
+    public void setValueRus(String valueRus) {
+        this.valueRus = valueRus;
+    }
+
+    public DefinitionRow withValueRus(String valueRus) {
+        this.valueRus = valueRus;
+        return this;
+    }
+
+    public String getValueLang() {
+        return valueLang;
+    }
+
+    public void setValueLang(String valueLang) {
+        this.valueLang = valueLang;
+    }
+
+    public DefinitionRow withValueLang(String valueLang) {
+        this.valueLang = valueLang;
+        return this;
     }
 
     public String getLanguage() {
@@ -119,21 +139,32 @@ public class DefinitionRow {
         this.language = language;
     }
 
-    public String getCreatedAt() {
-        return createdAt;
+    public DefinitionRow withLanguage(String language) {
+        this.language = language;
+        return this;
     }
 
-    public void setCreatedAt(String createdAt) {
-        this.createdAt = createdAt;
+    public String getSection() {
+        return section;
     }
 
-    public String getUpdatedAt() {
-        return updatedAt;
+    public void setSection(String section) {
+        this.section = section;
     }
 
-    public void setUpdatedAt(String updatedAt) {
-        this.updatedAt = updatedAt;
+    public DefinitionRow withSection(String section) {
+        this.section = section;
+        return this;
     }
+
+    public void setExpanded(boolean expanded) {
+        isExpanded = expanded;
+    }
+
+    public boolean isExpanded() {
+        return isExpanded;
+    }
+
 
     @Override
     public String toString() {
@@ -143,33 +174,29 @@ public class DefinitionRow {
         sb.append('=');
         sb.append(((this.id == null)?"<null>":this.id));
         sb.append(',');
-        sb.append("name");
-        sb.append('=');
-        sb.append(((this.name == null)?"<null>":this.name));
-        sb.append(',');
         sb.append("nameRus");
         sb.append('=');
         sb.append(((this.nameRus == null)?"<null>":this.nameRus));
         sb.append(',');
-        sb.append("body");
+        sb.append("nameLang");
         sb.append('=');
-        sb.append(((this.body == null)?"<null>":this.body));
+        sb.append(((this.nameLang == null)?"<null>":this.nameLang));
         sb.append(',');
-        sb.append("bodyRus");
+        sb.append("valueRus");
         sb.append('=');
-        sb.append(((this.bodyRus == null)?"<null>":this.bodyRus));
+        sb.append(((this.valueRus == null)?"<null>":this.valueRus));
+        sb.append(',');
+        sb.append("valueLang");
+        sb.append('=');
+        sb.append(((this.valueLang == null)?"<null>":this.valueLang));
         sb.append(',');
         sb.append("language");
         sb.append('=');
         sb.append(((this.language == null)?"<null>":this.language));
         sb.append(',');
-        sb.append("createdAt");
+        sb.append("section");
         sb.append('=');
-        sb.append(((this.createdAt == null)?"<null>":this.createdAt));
-        sb.append(',');
-        sb.append("updatedAt");
-        sb.append('=');
-        sb.append(((this.updatedAt == null)?"<null>":this.updatedAt));
+        sb.append(((this.section == null)?"<null>":this.section));
         sb.append(',');
         if (sb.charAt((sb.length()- 1)) == ',') {
             sb.setCharAt((sb.length()- 1), ']');
@@ -182,14 +209,13 @@ public class DefinitionRow {
     @Override
     public int hashCode() {
         int result = 1;
-        result = ((result* 31)+((this.createdAt == null)? 0 :this.createdAt.hashCode()));
         result = ((result* 31)+((this.nameRus == null)? 0 :this.nameRus.hashCode()));
-        result = ((result* 31)+((this.name == null)? 0 :this.name.hashCode()));
-        result = ((result* 31)+((this.bodyRus == null)? 0 :this.bodyRus.hashCode()));
+        result = ((result* 31)+((this.valueLang == null)? 0 :this.valueLang.hashCode()));
+        result = ((result* 31)+((this.nameLang == null)? 0 :this.nameLang.hashCode()));
         result = ((result* 31)+((this.language == null)? 0 :this.language.hashCode()));
+        result = ((result* 31)+((this.section == null)? 0 :this.section.hashCode()));
         result = ((result* 31)+((this.id == null)? 0 :this.id.hashCode()));
-        result = ((result* 31)+((this.body == null)? 0 :this.body.hashCode()));
-        result = ((result* 31)+((this.updatedAt == null)? 0 :this.updatedAt.hashCode()));
+        result = ((result* 31)+((this.valueRus == null)? 0 :this.valueRus.hashCode()));
         return result;
     }
 
@@ -202,6 +228,7 @@ public class DefinitionRow {
             return false;
         }
         DefinitionRow rhs = ((DefinitionRow) other);
-        return (((((((((this.createdAt == rhs.createdAt)||((this.createdAt!= null)&&this.createdAt.equals(rhs.createdAt)))&&((this.nameRus == rhs.nameRus)||((this.nameRus!= null)&&this.nameRus.equals(rhs.nameRus))))&&((this.name == rhs.name)||((this.name!= null)&&this.name.equals(rhs.name))))&&((this.bodyRus == rhs.bodyRus)||((this.bodyRus!= null)&&this.bodyRus.equals(rhs.bodyRus))))&&((this.language == rhs.language)||((this.language!= null)&&this.language.equals(rhs.language))))&&((this.id == rhs.id)||((this.id!= null)&&this.id.equals(rhs.id))))&&((this.body == rhs.body)||((this.body!= null)&&this.body.equals(rhs.body))))&&((this.updatedAt == rhs.updatedAt)||((this.updatedAt!= null)&&this.updatedAt.equals(rhs.updatedAt))));
+        return ((((((((this.nameRus == rhs.nameRus)||((this.nameRus!= null)&&this.nameRus.equals(rhs.nameRus)))&&((this.valueLang == rhs.valueLang)||((this.valueLang!= null)&&this.valueLang.equals(rhs.valueLang))))&&((this.nameLang == rhs.nameLang)||((this.nameLang!= null)&&this.nameLang.equals(rhs.nameLang))))&&((this.language == rhs.language)||((this.language!= null)&&this.language.equals(rhs.language))))&&((this.section == rhs.section)||((this.section!= null)&&this.section.equals(rhs.section))))&&((this.id == rhs.id)||((this.id!= null)&&this.id.equals(rhs.id))))&&((this.valueRus == rhs.valueRus)||((this.valueRus!= null)&&this.valueRus.equals(rhs.valueRus))));
     }
+
 }

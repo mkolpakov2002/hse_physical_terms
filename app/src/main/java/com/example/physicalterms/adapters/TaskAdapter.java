@@ -19,7 +19,7 @@ import java.util.List;
 public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder>{
     private List<TaskRow> mData;
     private LayoutInflater mInflater;
-    private FormulaAdapter.ItemClickListener mClickListener;
+    private ItemClickListener mClickListener;
 
     // data is passed into the constructor
     public TaskAdapter(Context context, List<TaskRow> data) {
@@ -67,12 +67,24 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder>{
             taskItemRightAnswerView = itemView.findViewById(R.id.taskItemRightAnswer);
             taskItemTaskView = itemView.findViewById(R.id.taskItemTaskType);
             taskItemView = itemView.findViewById(R.id.taskItemSection);
-            itemView.setOnClickListener(this);
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (mClickListener != null) mClickListener.onItemClick(view);
+                }
+            });
+            itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    if (mClickListener != null) mClickListener.onItemClick(view);
+                    return true;
+                }
+            });
         }
 
         @Override
         public void onClick(View view) {
-            if (mClickListener != null) mClickListener.onItemClick(view, getAdapterPosition());
+            if (mClickListener != null) mClickListener.onItemClick(view);
         }
     }
 
@@ -82,13 +94,13 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder>{
     }
 
     // allows clicks events to be caught
-    public void setClickListener(FormulaAdapter.ItemClickListener itemClickListener) {
+    public void setClickListener(TaskAdapter.ItemClickListener itemClickListener) {
         this.mClickListener = itemClickListener;
     }
 
     // parent activity will implement this method to respond to click events
     public interface ItemClickListener {
-        void onItemClick(View view, int position);
+        void onItemClick(View view);
     }
 
     public void setData(List<TaskRow> newData){

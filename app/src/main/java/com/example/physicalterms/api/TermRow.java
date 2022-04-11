@@ -1,30 +1,36 @@
 package com.example.physicalterms.api;
 
+import androidx.room.Entity;
+import androidx.room.Ignore;
+import androidx.room.PrimaryKey;
+
 import javax.annotation.Generated;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+@Entity(tableName = "terms")
 @Generated("jsonschema2pojo")
 public class TermRow {
 
+    @PrimaryKey
     @SerializedName("id")
     @Expose
     private Integer id;
-    @SerializedName("name")
-    @Expose
-    private String name;
     @SerializedName("name_rus")
     @Expose
     private String nameRus;
+    @SerializedName("name_lang")
+    @Expose
+    private String nameLang;
     @SerializedName("language")
     @Expose
     private String language;
-    @SerializedName("createdAt")
+    @SerializedName("section")
     @Expose
-    private String createdAt;
-    @SerializedName("updatedAt")
-    @Expose
-    private String updatedAt;
+    private String section;
+
+    @Ignore
+    private boolean isExpanded = false;
 
     /**
      * No args constructor for use in serialization
@@ -35,21 +41,19 @@ public class TermRow {
 
     /**
      *
-     * @param createdAt
      * @param nameRus
-     * @param name
+     * @param nameLang
      * @param language
+     * @param section
      * @param id
-     * @param updatedAt
      */
-    public TermRow(Integer id, String name, String nameRus, String language, String createdAt, String updatedAt) {
+    public TermRow(Integer id, String nameRus, String nameLang, String language, String section) {
         super();
         this.id = id;
-        this.name = name;
         this.nameRus = nameRus;
+        this.nameLang = nameLang;
         this.language = language;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
+        this.section = section;
     }
 
     public Integer getId() {
@@ -60,12 +64,9 @@ public class TermRow {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
+    public TermRow withId(Integer id) {
+        this.id = id;
+        return this;
     }
 
     public String getNameRus() {
@@ -76,6 +77,24 @@ public class TermRow {
         this.nameRus = nameRus;
     }
 
+    public TermRow withNameRus(String nameRus) {
+        this.nameRus = nameRus;
+        return this;
+    }
+
+    public String getNameLang() {
+        return nameLang;
+    }
+
+    public void setNameLang(String nameLang) {
+        this.nameLang = nameLang;
+    }
+
+    public TermRow withNameLang(String nameLang) {
+        this.nameLang = nameLang;
+        return this;
+    }
+
     public String getLanguage() {
         return language;
     }
@@ -84,20 +103,30 @@ public class TermRow {
         this.language = language;
     }
 
-    public String getCreatedAt() {
-        return createdAt;
+    public TermRow withLanguage(String language) {
+        this.language = language;
+        return this;
     }
 
-    public void setCreatedAt(String createdAt) {
-        this.createdAt = createdAt;
+    public String getSection() {
+        return section;
     }
 
-    public String getUpdatedAt() {
-        return updatedAt;
+    public void setSection(String section) {
+        this.section = section;
     }
 
-    public void setUpdatedAt(String updatedAt) {
-        this.updatedAt = updatedAt;
+    public TermRow withSection(String section) {
+        this.section = section;
+        return this;
+    }
+
+    public boolean isExpanded() {
+        return isExpanded;
+    }
+
+    public void setExpanded(boolean expanded) {
+        isExpanded = expanded;
     }
 
     @Override
@@ -108,25 +137,21 @@ public class TermRow {
         sb.append('=');
         sb.append(((this.id == null)?"<null>":this.id));
         sb.append(',');
-        sb.append("name");
-        sb.append('=');
-        sb.append(((this.name == null)?"<null>":this.name));
-        sb.append(',');
         sb.append("nameRus");
         sb.append('=');
         sb.append(((this.nameRus == null)?"<null>":this.nameRus));
+        sb.append(',');
+        sb.append("nameLang");
+        sb.append('=');
+        sb.append(((this.nameLang == null)?"<null>":this.nameLang));
         sb.append(',');
         sb.append("language");
         sb.append('=');
         sb.append(((this.language == null)?"<null>":this.language));
         sb.append(',');
-        sb.append("createdAt");
+        sb.append("section");
         sb.append('=');
-        sb.append(((this.createdAt == null)?"<null>":this.createdAt));
-        sb.append(',');
-        sb.append("updatedAt");
-        sb.append('=');
-        sb.append(((this.updatedAt == null)?"<null>":this.updatedAt));
+        sb.append(((this.section == null)?"<null>":this.section));
         sb.append(',');
         if (sb.charAt((sb.length()- 1)) == ',') {
             sb.setCharAt((sb.length()- 1), ']');
@@ -139,12 +164,11 @@ public class TermRow {
     @Override
     public int hashCode() {
         int result = 1;
-        result = ((result* 31)+((this.createdAt == null)? 0 :this.createdAt.hashCode()));
-        result = ((result* 31)+((this.nameRus == null)? 0 :this.nameRus.hashCode()));
-        result = ((result* 31)+((this.name == null)? 0 :this.name.hashCode()));
+        result = ((result* 31)+((this.nameLang == null)? 0 :this.nameLang.hashCode()));
         result = ((result* 31)+((this.language == null)? 0 :this.language.hashCode()));
+        result = ((result* 31)+((this.section == null)? 0 :this.section.hashCode()));
         result = ((result* 31)+((this.id == null)? 0 :this.id.hashCode()));
-        result = ((result* 31)+((this.updatedAt == null)? 0 :this.updatedAt.hashCode()));
+        result = ((result* 31)+((this.nameRus == null)? 0 :this.nameRus.hashCode()));
         return result;
     }
 
@@ -157,7 +181,7 @@ public class TermRow {
             return false;
         }
         TermRow rhs = ((TermRow) other);
-        return (((((((this.createdAt == rhs.createdAt)||((this.createdAt!= null)&&this.createdAt.equals(rhs.createdAt)))&&((this.nameRus == rhs.nameRus)||((this.nameRus!= null)&&this.nameRus.equals(rhs.nameRus))))&&((this.name == rhs.name)||((this.name!= null)&&this.name.equals(rhs.name))))&&((this.language == rhs.language)||((this.language!= null)&&this.language.equals(rhs.language))))&&((this.id == rhs.id)||((this.id!= null)&&this.id.equals(rhs.id))))&&((this.updatedAt == rhs.updatedAt)||((this.updatedAt!= null)&&this.updatedAt.equals(rhs.updatedAt))));
+        return ((((((this.nameLang == rhs.nameLang)||((this.nameLang!= null)&&this.nameLang.equals(rhs.nameLang)))&&((this.language == rhs.language)||((this.language!= null)&&this.language.equals(rhs.language))))&&((this.section == rhs.section)||((this.section!= null)&&this.section.equals(rhs.section))))&&((this.id == rhs.id)||((this.id!= null)&&this.id.equals(rhs.id))))&&((this.nameRus == rhs.nameRus)||((this.nameRus!= null)&&this.nameRus.equals(rhs.nameRus))));
     }
 
 }

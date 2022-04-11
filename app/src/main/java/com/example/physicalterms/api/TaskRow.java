@@ -1,13 +1,18 @@
 package com.example.physicalterms.api;
 
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
 import java.util.List;
 import javax.annotation.Generated;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+@Entity(tableName = "tasks")
 @Generated("jsonschema2pojo")
 public class TaskRow {
 
+    @PrimaryKey
     @SerializedName("id")
     @Expose
     private Integer id;

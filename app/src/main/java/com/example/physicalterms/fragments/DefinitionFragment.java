@@ -6,6 +6,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -19,9 +20,10 @@ import com.example.physicalterms.ApiService;
 import com.example.physicalterms.App;
 import com.example.physicalterms.R;
 import com.example.physicalterms.adapters.DefinitionAdapter;
+import com.example.physicalterms.adapters.TaskAdapter;
 import com.example.physicalterms.api.DefinitionRow;
-import com.example.physicalterms.api.DefinitionType;
 import com.google.android.material.appbar.MaterialToolbar;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +37,7 @@ import retrofit2.Response;
  * Use the {@link DefinitionFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class DefinitionFragment extends Fragment implements DefinitionAdapter.ItemClickListener, SwipeRefreshLayout.OnRefreshListener {
+public class DefinitionFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, DefinitionAdapter.ItemClickListener {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -87,11 +89,6 @@ public class DefinitionFragment extends Fragment implements DefinitionAdapter.It
 
     }
 
-    @Override
-    public void onItemClick(View view, int position) {
-        //
-    }
-
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState){
 
         materialToolbar = view.findViewById(R.id.toolbar_def);
@@ -122,23 +119,35 @@ public class DefinitionFragment extends Fragment implements DefinitionAdapter.It
     void downloadData(){
         ApiService apiService = App.getApiService();
 
-        Call<DefinitionType> call = apiService.getDefinitionList();
-        call.enqueue(new Callback<DefinitionType>() {
+        Call<List<DefinitionRow>> call = apiService.getDefinitionListByLang(App.getLearningLanguage(), "all");
+        call.enqueue(new Callback<List<DefinitionRow>>() {
             @Override
-            public void onResponse(@NonNull Call<DefinitionType> call, @NonNull Response<DefinitionType> response) {
+            public void onResponse(@NonNull Call<List<DefinitionRow>> call, @NonNull Response<List<DefinitionRow>> response) {
                 if (response.body() != null) {
-                    result = response.body().getRows();
+                    result = response.body();
                     adapter.setData(result);
+                    App.getDatabase().getDefinitionRowDao().deleteAll();
+                    App.getDatabase().getDefinitionRowDao().insertAll(result);
                 } else {
                     String s = "No objects";
                     Log.d(TAG, s);
+                    List<DefinitionRow> saved = App.getDatabase().getDefinitionRowDao().getAll();
+                    if(saved.size()>0){
+                        adapter.setData(saved);
+                    }
+                    showSnackBar(getString(R.string.connection_error));
                 }
                 swipeRefreshLayout.setRefreshing(false);
             }
 
             @Override
-            public void onFailure(@NonNull Call<DefinitionType> call, @NonNull Throwable t) {
+            public void onFailure(@NonNull Call<List<DefinitionRow>> call, @NonNull Throwable t) {
                 Log.e(TAG, t.toString());
+                List<DefinitionRow> saved = App.getDatabase().getDefinitionRowDao().getAll();
+                if(saved.size()>0){
+                    adapter.setData(saved);
+                }
+                showSnackBar(getString(R.string.connection_error));
                 swipeRefreshLayout.setRefreshing(false);
             }
         });
@@ -161,4 +170,21 @@ public class DefinitionFragment extends Fragment implements DefinitionAdapter.It
         swipeRefreshLayout.setRefreshing(true);
         downloadData();
     }
+
+    @Override
+    public void onItemClick(View view) {
+        Navigation.findNavController(view).navigate(R.id.dialogCardFragment);
+    }
+
+    private void showSnackBar(String message){
+        Snackbar.make(swipeRefreshLayout, message, Snackbar.LENGTH_LONG)
+                .setAction("OK", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        //nothing
+                    }
+                })
+                .show();
+    }
+
 }

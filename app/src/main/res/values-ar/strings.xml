@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Physical terms</string>
+    <string name="greeting_title">مرحبا! &#128400;</string>
+    <string name="select_language_for_learning">اختر لغة للتعلم</string>
+    <string name="select_your_main_language">اختر لغتك الرئيسية</string>
+    <string name="welcome_to_hse_physical_terms_learning_app">مرحبا بكم في تطبيق تعلم المصطلحات الفيزيائية للصحة والسلامة والبيئة</string>
+    <string name="definition_list">قائمة التعاريف</string>
+    <string name="definitions">التعاريف</string>
+    <string name="formulas">الصيغ</string>
+    <string name="tasks">المهام</string>
+    <string name="terms">الشروط</string>
+    <string name="main">الرئيسية</string>
+    <string name="term_list">قائمة المصطلحات</string>
+    <string name="task_list">قائمة المهام</string>
+    <string name="formula_list">قائمة الصيغ</string>
+    <string name="connection_error">خطأ في الاتصال ، حاول لاحقا...</string>
+</resources>

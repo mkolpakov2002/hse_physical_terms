@@ -6,6 +6,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -18,13 +19,11 @@ import android.view.ViewGroup;
 import com.example.physicalterms.ApiService;
 import com.example.physicalterms.App;
 import com.example.physicalterms.R;
-import com.example.physicalterms.adapters.DefinitionAdapter;
 import com.example.physicalterms.adapters.FormulaAdapter;
 import com.example.physicalterms.api.DefinitionRow;
-import com.example.physicalterms.api.DefinitionType;
 import com.example.physicalterms.api.FormulaRow;
-import com.example.physicalterms.api.FormulaType;
 import com.google.android.material.appbar.MaterialToolbar;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +37,7 @@ import retrofit2.Response;
  * Use the {@link FormulaFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class FormulaFragment extends Fragment implements FormulaAdapter.ItemClickListener, SwipeRefreshLayout.OnRefreshListener  {
+public class FormulaFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, FormulaAdapter.ItemClickListener  {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -95,6 +94,7 @@ public class FormulaFragment extends Fragment implements FormulaAdapter.ItemClic
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
 
+
         materialToolbar = view.findViewById(R.id.toolbar_form);
 
         materialToolbar.setTitle(getString(R.string.formulas));
@@ -116,36 +116,44 @@ public class FormulaFragment extends Fragment implements FormulaAdapter.ItemClic
         }
 
         formulaList.setLayoutManager(new LinearLayoutManager(requireContext()));
+        formulaList.setHasFixedSize(false);
     }
 
     void downloadData(){
         ApiService apiService = App.getApiService();
 
-        Call<FormulaType> call = apiService.getFormulaList();
-        call.enqueue(new Callback<FormulaType>() {
+        Call<List<FormulaRow>> call = apiService.getFormulaListByLang(App.getLearningLanguage(), "all");
+        call.enqueue(new Callback<List<FormulaRow>>() {
             @Override
-            public void onResponse(@NonNull Call<FormulaType> call, @NonNull Response<FormulaType> response) {
+            public void onResponse(@NonNull Call<List<FormulaRow>> call, @NonNull Response<List<FormulaRow>> response) {
                 if (response.body() != null) {
-                    result = response.body().getRows();
+                    result = response.body();
                     adapter.setData(result);
+                    App.getDatabase().getFormulaRowDao().deleteAll();
+                    App.getDatabase().getFormulaRowDao().insertAll(result);
                 } else {
                     String s = "No objects";
                     Log.d(TAG, s);
+                    List<FormulaRow> saved = App.getDatabase().getFormulaRowDao().getAll();
+                    if(saved.size()>0){
+                        adapter.setData(saved);
+                    }
+                    showSnackBar(getString(R.string.connection_error));
                 }
                 swipeRefreshLayout.setRefreshing(false);
             }
 
             @Override
-            public void onFailure(@NonNull Call<FormulaType> call, @NonNull Throwable t) {
+            public void onFailure(@NonNull Call<List<FormulaRow>> call, @NonNull Throwable t) {
                 Log.e(TAG, t.toString());
+                List<FormulaRow> saved = App.getDatabase().getFormulaRowDao().getAll();
+                if(saved.size()>0){
+                    adapter.setData(saved);
+                }
+                showSnackBar(getString(R.string.connection_error));
                 swipeRefreshLayout.setRefreshing(false);
             }
         });
-    }
-
-    @Override
-    public void onItemClick(View view, int position) {
-
     }
 
     /**
@@ -156,4 +164,21 @@ public class FormulaFragment extends Fragment implements FormulaAdapter.ItemClic
         swipeRefreshLayout.setRefreshing(true);
         downloadData();
     }
+
+    @Override
+    public void onItemClick(View view) {
+        Navigation.findNavController(view).navigate(R.id.dialogCardFragment);
+    }
+
+    private void showSnackBar(String message){
+        Snackbar.make(swipeRefreshLayout, message, Snackbar.LENGTH_LONG)
+                .setAction("OK", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        //nothing
+                    }
+                })
+                .show();
+    }
+
 }

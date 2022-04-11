@@ -1,7 +1,6 @@
 package com.example.physicalterms;
 
-import static com.example.physicalterms.Constants.API_BASE_URL;
-import static com.example.physicalterms.Constants.TOKEN;
+import static com.example.physicalterms.Constants.languages;
 
 import android.app.Activity;
 import android.app.Application;
@@ -9,19 +8,22 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.preference.PreferenceManager;
 
-import androidx.annotation.NonNull;
+import androidx.appcompat.content.res.AppCompatResources;
+import androidx.core.content.res.ResourcesCompat;
+import androidx.room.Room;
 
-import java.io.IOException;
+import com.google.android.material.color.DynamicColors;
+
+import org.scilab.forge.jlatexmath.core.AjLatexMath;
+
 import java.util.Locale;
 
-import okhttp3.Interceptor;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
+import io.github.kbiakov.codeview.classifier.CodeProcessor;
 import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class App extends Application {
 
@@ -31,11 +33,16 @@ public class App extends Application {
 
     private static ApiService apiService;
 
-    static SharedPreferences preferences;
+    private static SharedPreferences preferences;
 
-    static String mainLanguage;
+    private static String mainLanguage;
 
-    static String learningLanguage;
+    private static String learningLanguage;
+
+    private static boolean isLanguageSelected = false;
+
+    private static AppDataBase database;
+
 
     @Override
     public void onCreate() {
@@ -46,23 +53,39 @@ public class App extends Application {
             apiService = retrofit.create(ApiService.class);
         }
 
+        database = Room.databaseBuilder(this, AppDataBase.class, "dataRows")
+                .allowMainThreadQueries()
+                .fallbackToDestructiveMigration()
+                .build();
+
+        DynamicColors.applyToActivitiesIfAvailable(this);
+        AjLatexMath.init(this);
+        CodeProcessor.init(this);
 
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        String name = preferences.getString("isFirstLaunch", "1");
-        if(name.equals("1")) {
-            SharedPreferences.Editor editor = preferences.edit();
-            editor.putString("isFirstLaunch","0");
-            editor.putString("mainLanguage","en");
-            editor.putString("learningLanguage","ru");
-            learningLanguage = "ru";
-            editor.apply();
-        }
-        mainLanguage = preferences.getString("mainLanguage", "en");
-        learningLanguage = preferences.getString("mainLanguage", "ru");
+        String name = preferences.getString("isLanguageSelected", "0");
+        isLanguageSelected = name.equals("1");
+        mainLanguage = preferences.getString("mainLanguage", languages[5][1]);
+        learningLanguage = preferences.getString("learningLanguage", languages[0][1]);
+
     }
 
     public static void setLocale(Activity activity) {
-        Locale locale = new Locale(mainLanguage);
+        Locale locale;
+        if(mainLanguage.equals(languages[0][1])){
+            locale = new Locale(languages[0][2]);
+        } else if(mainLanguage.equals(languages[1][1])){
+            locale = new Locale(languages[1][2]);
+        } else if(mainLanguage.equals(languages[2][1])){
+            locale = new Locale(languages[2][2]);
+        } else if(mainLanguage.equals(languages[3][1])){
+            locale = new Locale(languages[3][2]);
+        } else if(mainLanguage.equals(languages[4][1])){
+            locale = new Locale(languages[3][2]);
+        } else {
+            locale = new Locale(languages[0][2]);
+        }
+
         Locale.setDefault(locale);
         Resources resources = activity.getResources();
         Configuration config = resources.getConfiguration();
@@ -80,5 +103,64 @@ public class App extends Application {
 
     public static ApiService getApiService() {
         return apiService;
+    }
+
+    public static boolean isIsLanguageSelected() {
+        return isLanguageSelected;
+    }
+
+    public static void setIsLanguageSelected(boolean isLanguageSelected) {
+        App.isLanguageSelected = isLanguageSelected;
+        SharedPreferences.Editor editor = preferences.edit();
+        if(isLanguageSelected)
+            editor.putString("isLanguageSelected","1");
+        else editor.putString("isLanguageSelected","0");
+        editor.putString("mainLanguage",mainLanguage);
+        editor.putString("learningLanguage",learningLanguage);
+        editor.apply();
+    }
+
+    public static String getLearningLanguage() {
+        return learningLanguage;
+    }
+
+    public static Drawable getLearningLanguageIcon(Context c) {
+        Resources resources = c.getResources();
+        Drawable d = ResourcesCompat.getDrawable(resources, resources.getIdentifier(languages[0][1], "drawable",
+                c.getPackageName()), null);
+        if(learningLanguage.equals(languages[0][1])){
+            return ResourcesCompat.getDrawable(resources, resources.getIdentifier(languages[0][1], "drawable",
+                    c.getPackageName()), null);
+        } else if(learningLanguage.equals(languages[1][1])){
+            return ResourcesCompat.getDrawable(resources, resources.getIdentifier(languages[1][1], "drawable",
+                    c.getPackageName()), null);
+        } else if(learningLanguage.equals(languages[2][1])){
+            return ResourcesCompat.getDrawable(resources, resources.getIdentifier(languages[2][1], "drawable",
+                    c.getPackageName()), null);
+        } else if(learningLanguage.equals(languages[3][1])){
+            return ResourcesCompat.getDrawable(resources, resources.getIdentifier(languages[3][1], "drawable",
+                    c.getPackageName()), null);
+        } else if(learningLanguage.equals(languages[4][1])){
+            return ResourcesCompat.getDrawable(resources, resources.getIdentifier(languages[4][1], "drawable",
+                    c.getPackageName()), null);
+        } else {
+            return null;
+        }
+    }
+
+    public static String getMainLanguage() {
+        return mainLanguage;
+    }
+
+    public static void setLearningLanguage(String learningLanguage) {
+        App.learningLanguage = learningLanguage;
+    }
+
+    public static void setMainLanguage(String mainLanguage) {
+        App.mainLanguage = mainLanguage;
+    }
+
+    public static AppDataBase getDatabase() {
+        return database;
     }
 }

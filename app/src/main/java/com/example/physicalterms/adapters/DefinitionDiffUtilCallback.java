@@ -77,12 +77,11 @@ public class DefinitionDiffUtilCallback extends DiffUtil.Callback{
     public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
         DefinitionRow oldDefinition = oldList.get(oldItemPosition);
         DefinitionRow newDefinition = newList.get(newItemPosition);
-        return oldDefinition.getName().equals(newDefinition.getName())
+        return oldDefinition.getNameLang().equals(newDefinition.getNameLang())
                 && oldDefinition.getNameRus().equals(newDefinition.getNameRus())
-                && oldDefinition.getBody().equals(newDefinition.getBody())
-                && oldDefinition.getBodyRus().equals(newDefinition.getBodyRus())
+                && oldDefinition.getValueLang().equals(newDefinition.getValueLang())
+                && oldDefinition.getValueRus().equals(newDefinition.getValueRus())
                 && oldDefinition.getLanguage().equals(newDefinition.getLanguage())
-                && oldDefinition.getCreatedAt().equals(newDefinition.getCreatedAt())
-                && oldDefinition.getUpdatedAt().equals(newDefinition.getUpdatedAt());
+                && oldDefinition.isExpanded() == newDefinition.isExpanded();
     }
 }

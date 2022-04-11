@@ -4,6 +4,7 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -22,6 +23,7 @@ import android.widget.TextSwitcher;
 import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
+import com.example.physicalterms.App;
 import com.example.physicalterms.R;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
@@ -73,11 +75,6 @@ public class MainFragment extends Fragment {
         materialToolbar.setTitleTextColor(getResources().getColor(R.color.white));
 
 
-        Animation slideInLeftAnimation = AnimationUtils.loadAnimation(view.getContext(),
-                android.R.anim.slide_in_left);
-        Animation slideOutRightAnimation = AnimationUtils.loadAnimation(view.getContext(),
-                android.R.anim.slide_out_right);
-
         DisplayMetrics metrics = new DisplayMetrics();
         requireActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
         Resources r = getResources();
@@ -93,6 +90,10 @@ public class MainFragment extends Fragment {
         }
 
         textSwitcher = (TextSwitcher) view.findViewById(R.id.greetingTextSwitcher);
+        Animation slideInLeftAnimation = AnimationUtils.loadAnimation(view.getContext(),
+                android.R.anim.slide_in_left);
+        Animation slideOutRightAnimation = AnimationUtils.loadAnimation(view.getContext(),
+                android.R.anim.slide_out_right);
         textSwitcher.setInAnimation(slideInLeftAnimation);
         textSwitcher.setOutAnimation(slideOutRightAnimation);
 

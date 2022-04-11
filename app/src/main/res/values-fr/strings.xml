@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Physical terms</string>
+    <string name="definitions">Définition</string>
+    <string name="formulas">Formule</string>
+    <string name="tasks">Tâche</string>
+    <string name="terms">Terme</string>
+    <string name="main">Principal</string>
+    <string name="term_list">Liste des termes</string>
+    <string name="task_list">Liste des tâches</string>
+    <string name="formula_list">Liste des formules</string>
+    <string name="definition_list">Liste des définitions</string>
+    <string name="welcome_to_hse_physical_terms_learning_app">Bienvenue sur l\'application d\'apprentissage des termes physiques HSE</string>
+    <string name="select_your_main_language">Sélectionnez votre langue principale</string>
+    <string name="select_language_for_learning">Sélectionnez la langue pour l\'apprentissage</string>
+    <string name="greeting_title">Salut! &#128400;</string>
+    <string name="connection_error">Erreur de connexion, essayez plus tard...</string>
+</resources>

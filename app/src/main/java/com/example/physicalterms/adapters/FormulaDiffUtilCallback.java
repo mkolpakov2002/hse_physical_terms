@@ -77,13 +77,13 @@ public class FormulaDiffUtilCallback extends DiffUtil.Callback{
     public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
         FormulaRow oldDefinition = oldList.get(oldItemPosition);
         FormulaRow newDefinition = newList.get(newItemPosition);
-        return oldDefinition.getName().equals(newDefinition.getName())
+        return oldDefinition.getNameLang().equals(newDefinition.getNameLang())
                 && oldDefinition.getNameRus().equals(newDefinition.getNameRus())
-                && oldDefinition.getComment().equals(newDefinition.getComment())
+                && oldDefinition.getCommentLang().equals(newDefinition.getCommentLang())
+                && oldDefinition.getCommentRus().equals(newDefinition.getCommentRus())
                 && oldDefinition.getValue().equals(newDefinition.getValue())
                 && oldDefinition.getSection().equals(newDefinition.getSection())
                 && oldDefinition.getLanguage().equals(newDefinition.getLanguage())
-                && oldDefinition.getCreatedAt().equals(newDefinition.getCreatedAt())
-                && oldDefinition.getUpdatedAt().equals(newDefinition.getUpdatedAt());
+                && oldDefinition.isExpanded() == newDefinition.isExpanded();
     }
 }

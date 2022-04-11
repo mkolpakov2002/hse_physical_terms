@@ -1,33 +1,37 @@
 package com.example.physicalterms;
 
 
-import static com.example.physicalterms.Constants.TOKEN;
-
 import com.example.physicalterms.api.DefinitionRow;
-import com.example.physicalterms.api.DefinitionType;
-import com.example.physicalterms.api.FormulaType;
-import com.example.physicalterms.api.TaskType;
-import com.example.physicalterms.api.TermType;
-import com.example.physicalterms.api.User;
+import com.example.physicalterms.api.FormulaRow;
+import com.example.physicalterms.api.TaskRow;
+import com.example.physicalterms.api.TermRow;
+
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
-import retrofit2.http.Header;
-import retrofit2.http.Headers;
 import retrofit2.http.Path;
-import retrofit2.http.Query;
 
 public interface ApiService {
 
-    @GET("/api/definitions/get")
-    Call<DefinitionType> getDefinitionList();
+    @GET("/definitions/get")
+    Call<List<DefinitionRow>> getDefinitionList();
 
-    @GET("/api/formulas/get")
-    Call<FormulaType> getFormulaList();
+    @GET("/formulas/get")
+    Call<List<FormulaRow>> getFormulaList();
 
-    @GET("/api/tasks/get")
-    Call<TaskType> getTaskList();
+    @GET("/tasks/get")
+    Call<List<TaskRow>> getTaskList();
 
-    @GET("/api/terms/get")
-    Call<TermType> getTermList();
+    @GET("/terms/get")
+    Call<List<TermRow>> getTermList();
+
+    @GET("/definitions/getByParams/{lang}/{section}")
+    Call<List<DefinitionRow>> getDefinitionListByLang(@Path("lang") String langCodeName, @Path("section") String sectionName);
+
+    @GET("/formulas/getByParams/{lang}/{section}")
+    Call<List<FormulaRow>> getFormulaListByLang(@Path("lang") String langCodeName, @Path("section") String sectionName);
+
+    @GET("/terms/getByParams/{lang}/{section}")
+    Call<List<TermRow>> getTermsListByLang(@Path("lang") String langCodeName, @Path("section") String sectionName);
 }

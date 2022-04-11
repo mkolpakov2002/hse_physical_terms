@@ -8,6 +8,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.os.Handler;
@@ -34,6 +35,9 @@ import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import mehdi.sakout.aboutpage.AboutPage;
+import mehdi.sakout.aboutpage.Element;
+
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -45,9 +49,6 @@ public class MainFragment extends Fragment {
     private static final String ARG_PARAM2 = "param2";
 
     // TODO: Rename and change types of parameters
-    private TextSwitcher textSwitcher;
-    private List<String> greetingsArray = new ArrayList<>();
-    private int index = 0;
     private MaterialToolbar materialToolbar;
 
     public MainFragment() {
@@ -60,84 +61,25 @@ public class MainFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_main, container, false);
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        Element versionElement = new Element();
+        versionElement.setTitle("Version 1.0");
+        return new AboutPage(requireContext())
+                .isRTL(false)
+                .setDescription("Welcome to ... " +
+                        "/TODO")
+                .setImage(R.drawable.miem)
+                .addItem(versionElement)
+                .addGroup("Connect with us")
+                .addEmail("mmkolpakov@edu.hse.ru")
+                .addWebsite("https://vk.com/mkolpakov2002")
+                .addPlayStore("ru.hse.control_system_v2")
+                .addGitHub("mkolpakov2002")
+                .create();
     }
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState){
 
-        materialToolbar = view.findViewById(R.id.toolbar_mf);
-
-        materialToolbar.setTitle(getString(R.string.app_name));
-        materialToolbar.setBackgroundColor(getResources().getColor(R.color.hse_purple));
-        materialToolbar.setTitleTextColor(getResources().getColor(R.color.white));
-
-
-        DisplayMetrics metrics = new DisplayMetrics();
-        requireActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
-        Resources r = getResources();
-        Configuration c = r.getConfiguration();
-        String[] loc = r.getAssets().getLocales();
-        for (int i = 0; i < loc.length; i++) {
-            Log.d("LOCALE", i + ": " + loc[i]);
-            c.locale = new Locale(loc[i]);
-            Resources res = new Resources(requireActivity().getAssets(), metrics, c);
-            String s1 = res.getString(R.string.greeting_title);
-            if(!greetingsArray.contains(s1))
-                greetingsArray.add(s1);
-        }
-
-        textSwitcher = (TextSwitcher) view.findViewById(R.id.greetingTextSwitcher);
-        Animation slideInLeftAnimation = AnimationUtils.loadAnimation(view.getContext(),
-                android.R.anim.slide_in_left);
-        Animation slideOutRightAnimation = AnimationUtils.loadAnimation(view.getContext(),
-                android.R.anim.slide_out_right);
-        textSwitcher.setInAnimation(slideInLeftAnimation);
-        textSwitcher.setOutAnimation(slideOutRightAnimation);
-
-        textSwitcher.setFactory(new ViewSwitcher.ViewFactory() {
-            @Override
-            public View makeView() {
-                TextView textView = new TextView(view.getContext());
-                textView.setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_TitleLarge);
-                textView.setGravity(Gravity.CENTER_HORIZONTAL);
-                return textView;
-            }
-        });
-        textSwitcher.setText(greetingsArray.get(index));
-        if(greetingsArray.size()>index+1){
-            index++;
-        } else {
-            index = 0;
-        }
-
-
     }
-
-    public void onPause(){
-        super.onPause();
-        textSwitcher.removeCallbacks(onEveryTenSecond);
-    }
-
-    public void onResume(){
-        super.onResume();
-        textSwitcher.postDelayed(onEveryTenSecond,5000);
-    }
-
-
-    private final Runnable onEveryTenSecond = new Runnable() {
-        @Override
-        public void run() {
-            textSwitcher.setText(greetingsArray.get(index));
-            if(greetingsArray.size()>index+1){
-                index++;
-            } else {
-                index = 0;
-            }
-            textSwitcher.postDelayed(this,5000);
-        }
-    };
 
 }

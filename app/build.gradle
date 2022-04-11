@@ -75,4 +75,6 @@ dependencies {
     // optional - Paging 3 Integration
     implementation "androidx.room:room-paging:$room_version"
 
+    implementation 'io.github.medyo:android-about-page:2.0.0'
+
 }

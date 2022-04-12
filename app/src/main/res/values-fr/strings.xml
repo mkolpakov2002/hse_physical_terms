@@ -15,4 +15,7 @@
     <string name="select_language_for_learning">Sélectionnez la langue pour l\'apprentissage</string>
     <string name="greeting_title">Salut! &#128400;</string>
     <string name="connection_error">Erreur de connexion, essayez plus tard...</string>
+    <string name="app_description">Bienvenue sur l\'application physical terms créée par des étudiants HSE. Ici, vous pouvez apprendre les langues facilement!</string>
+    <string name="connect_dev">Connectez-vous avec nous</string>
+    <string name="version_name">"Version "</string>
 </resources>

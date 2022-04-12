@@ -30,28 +30,42 @@
             style="@style/TextAppearance.Material3.TitleSmall"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
             android:text="formulaNameRus"
+            android:textStyle="italic"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/formulaItemNameText" />
+
+        <View
+            android:id="@+id/greyLine"
+            android:layout_width="fill_parent"
+            android:layout_height="2dp"
+            android:layout_marginTop="8dp"
+            android:background="?attr/colorOnPrimaryContainer"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/formulaItemNameRusText" />
 
         <com.daquexian.flexiblerichtextview.FlexibleRichTextView
             android:id="@+id/formulaItemValueText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:visibility="gone"
+            android:layout_marginTop="16dp"
+            android:visibility="visible"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/formulaItemNameRusText" />
+            app:layout_constraintTop_toBottomOf="@+id/greyLine" />
 
         <com.daquexian.flexiblerichtextview.FlexibleRichTextView
             android:id="@+id/formulaItemCommentText"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="start"
+            android:layout_marginTop="8dp"
             android:text="comment"
-            android:visibility="gone"
+            android:visibility="visible"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/formulaItemValueText" />
@@ -61,8 +75,9 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="start"
+            android:layout_marginTop="8dp"
             android:text="commentRus"
-            android:visibility="gone"
+            android:visibility="visible"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/formulaItemCommentText" />
@@ -72,8 +87,9 @@
             style="@style/TextAppearance.Material3.LabelLarge"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
             android:text="section"
-            android:visibility="gone"
+            android:visibility="visible"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/formulaItemCommentRusText" />
     </androidx.constraintlayout.widget.ConstraintLayout>

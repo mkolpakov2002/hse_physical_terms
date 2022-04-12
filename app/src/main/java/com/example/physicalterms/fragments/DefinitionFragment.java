@@ -2,25 +2,33 @@ package com.example.physicalterms.fragments;
 
 import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
 
+import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
+import androidx.core.view.MenuItemCompat;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 
+import com.dingmouren.layoutmanagergroup.skidright.SkidRightLayoutManager;
+import com.dingmouren.layoutmanagergroup.slide.ItemTouchHelperCallback;
 import com.example.physicalterms.ApiService;
 import com.example.physicalterms.App;
 import com.example.physicalterms.R;
 import com.example.physicalterms.adapters.DefinitionAdapter;
-import com.example.physicalterms.adapters.TaskAdapter;
 import com.example.physicalterms.api.DefinitionRow;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.snackbar.Snackbar;
@@ -52,8 +60,14 @@ public class DefinitionFragment extends Fragment implements SwipeRefreshLayout.O
     RecyclerView definitionList;
     DefinitionAdapter adapter;
     private SwipeRefreshLayout swipeRefreshLayout;
+    MenuItem menuItem;
+
+    boolean isListMode = true;
 
     private MaterialToolbar materialToolbar;
+    //Поиск среди устройств на главном экране
+    androidx.appcompat.widget.SearchView searchView;
+
 
     public DefinitionFragment() {
         // Required empty public constructor
@@ -94,8 +108,34 @@ public class DefinitionFragment extends Fragment implements SwipeRefreshLayout.O
         materialToolbar = view.findViewById(R.id.toolbar_def);
 
         materialToolbar.setTitle(getString(R.string.definitions));
-        materialToolbar.setBackgroundColor(getResources().getColor(R.color.hse_purple));
-        materialToolbar.setTitleTextColor(getResources().getColor(R.color.white));
+        //materialToolbar.setBackgroundColor(getResources().getColor(R.color.hse_purple));
+        //materialToolbar.setTitleTextColor(getResources().getColor(R.color.white));
+        materialToolbar.getMenu().clear();
+        materialToolbar.inflateMenu(R.menu.item_mode_menu);
+        MenuItem list = materialToolbar.getMenu().findItem(R.id.changeModeToList);
+        list.setVisible(false);
+        materialToolbar.setOnMenuItemClickListener(this::onOptionsItemSelected);
+        menuItem = materialToolbar.getMenu().findItem(R.id.search_device);
+        searchView = (androidx.appcompat.widget.SearchView) menuItem.getActionView();
+        searchView.setMaxWidth(Integer.MAX_VALUE);
+        // изменение цвета иконки поиска на белый
+//        ImageView icon = searchView.findViewById(R.id.);
+//        icon.setColorFilter(getResources().getColor(R.color.white));
+        // методы при взаимодействии со строкой поиска
+        searchView.setOnQueryTextListener(new androidx.appcompat.widget.SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                //запускается, когда будет нажата кнопка поиска
+                return false;
+            }
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                //вызывается после ввода пользователем каждого символа в текстовом поле
+                adapter.getFilter().filter(newText);
+                return true;
+            }
+        });
+
 
         definitionList = view.findViewById(R.id.definitionList);
         swipeRefreshLayout = view.findViewById(R.id.definitionSwipeRefreshLayout);
@@ -106,15 +146,56 @@ public class DefinitionFragment extends Fragment implements SwipeRefreshLayout.O
                 swipeRefreshLayout.setRefreshing(true);
                 downloadData();
             }
-            adapter = new DefinitionAdapter(requireContext(), result);
+            definitionList.setLayoutManager(new LinearLayoutManager(requireContext()));
+            adapter = new DefinitionAdapter(requireContext(), result, true);
             adapter.setClickListener(this);
             definitionList.setAdapter(adapter);
         }
-
-        definitionList.setLayoutManager(new LinearLayoutManager(requireContext()));
-
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.search_device) {
+            // открытие строки поиска
+            Log.d(TAG, "открытие строки поиска");
+            return true;
+        } else {
+            if(!searchView.isIconified()){
+                hideKeyboard(requireContext(), searchView);
+                MenuItemCompat.collapseActionView(menuItem);
+                searchView.setIconified(true);
+                adapter.setData(result);
+            }
+            if(item.getItemId() == R.id.changeModeToCard){
+                DefinitionAdapter adapter = new DefinitionAdapter(requireContext(), result, false);
+                adapter.setListMode(false);
+                ItemTouchHelperCallback mItemTouchHelperCallback = new ItemTouchHelperCallback(adapter, result);
+                ItemTouchHelper mItemTouchHelper = new ItemTouchHelper(mItemTouchHelperCallback);
+                SkidRightLayoutManager mSlideLayoutManager = new SkidRightLayoutManager(2F,0.9F);
+                mItemTouchHelper.attachToRecyclerView(definitionList);
+//            definitionList
+                definitionList.setOnFlingListener(null);
+                definitionList.setLayoutManager(mSlideLayoutManager);
+                definitionList.setAdapter(adapter);
+                item.setVisible(false);
+                MenuItem list = materialToolbar.getMenu().findItem(R.id.changeModeToList);
+                list.setVisible(true);
+                return true;
+            }
+            if(item.getItemId() == R.id.changeModeToList){
+                DefinitionAdapter adapter = new DefinitionAdapter(requireContext(), result, false);
+                adapter.setListMode(true);
+                definitionList.setOnFlingListener(null);
+                definitionList.setLayoutManager(new LinearLayoutManager(requireContext()));
+                definitionList.setAdapter(adapter);
+                item.setVisible(false);
+                MenuItem list = materialToolbar.getMenu().findItem(R.id.changeModeToCard);
+                list.setVisible(true);
+                return true;
+            }
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
     void downloadData(){
         ApiService apiService = App.getApiService();
@@ -133,6 +214,7 @@ public class DefinitionFragment extends Fragment implements SwipeRefreshLayout.O
                     Log.d(TAG, s);
                     List<DefinitionRow> saved = App.getDatabase().getDefinitionRowDao().getAll();
                     if(saved.size()>0){
+                        result = saved;
                         adapter.setData(saved);
                     }
                     showSnackBar(getString(R.string.connection_error));
@@ -145,6 +227,7 @@ public class DefinitionFragment extends Fragment implements SwipeRefreshLayout.O
                 Log.e(TAG, t.toString());
                 List<DefinitionRow> saved = App.getDatabase().getDefinitionRowDao().getAll();
                 if(saved.size()>0){
+                    result = saved;
                     adapter.setData(saved);
                 }
                 showSnackBar(getString(R.string.connection_error));
@@ -173,7 +256,7 @@ public class DefinitionFragment extends Fragment implements SwipeRefreshLayout.O
 
     @Override
     public void onItemClick(View view) {
-        Navigation.findNavController(view).navigate(R.id.dialogCardFragment);
+        //Navigation.findNavController(view).navigate(R.id.dialogCardFragment);
     }
 
     private void showSnackBar(String message){
@@ -185,6 +268,32 @@ public class DefinitionFragment extends Fragment implements SwipeRefreshLayout.O
                     }
                 })
                 .show();
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                if (!searchView.isIconified()) {
+                    //если открыта строка поиска, сворачиваем её
+                    searchView.setIconified(true);
+                    materialToolbar.collapseActionView();
+                } else {
+                    this.setEnabled(false);
+                    requireActivity().onBackPressed();
+                }
+            }
+
+        };
+        requireActivity().getOnBackPressedDispatcher().addCallback(this, callback);
+    }
+
+    public static void hideKeyboard(Context context, View view) {
+        InputMethodManager imm = (InputMethodManager) context.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
 }

@@ -1,5 +1,8 @@
 package com.example.physicalterms.fragments;
 
+import static com.example.physicalterms.Constants.DEV_EMAIL;
+import static com.example.physicalterms.Constants.DEV_SITE;
+
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Color;
@@ -25,6 +28,7 @@ import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
 import com.example.physicalterms.App;
+import com.example.physicalterms.BuildConfig;
 import com.example.physicalterms.R;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
@@ -63,18 +67,16 @@ public class MainFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         Element versionElement = new Element();
-        versionElement.setTitle("Version 1.0");
+        versionElement.setTitle(getString(R.string.version_name) + BuildConfig.VERSION_NAME);
         return new AboutPage(requireContext())
                 .isRTL(false)
-                .setDescription("Welcome to ... " +
-                        "/TODO")
+                .setDescription(getString(R.string.app_description))
                 .setImage(R.drawable.miem)
                 .addItem(versionElement)
-                .addGroup("Connect with us")
-                .addEmail("mmkolpakov@edu.hse.ru")
-                .addWebsite("https://vk.com/mkolpakov2002")
-                .addPlayStore("ru.hse.control_system_v2")
-                .addGitHub("mkolpakov2002")
+                .addGroup(getString(R.string.connect_dev))
+                .addEmail(DEV_EMAIL)
+                .addWebsite(DEV_SITE)
+                .addPlayStore(BuildConfig.APPLICATION_ID)
                 .create();
     }
 

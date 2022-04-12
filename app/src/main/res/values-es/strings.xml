@@ -15,4 +15,7 @@
     <string name="select_language_for_learning">Seleccione el idioma para aprender</string>
     <string name="greeting_title">¡Hola! &#128400;</string>
     <string name="connection_error">Error de conexión, inténtalo más tarde...</string>
+    <string name="app_description">Bienvenido a la aplicación de términos físicos creada por estudiantes de HSE. ¡Aquí puedes aprender idiomas fácilmente!</string>
+    <string name="connect_dev">Conéctese con nosotros</string>
+    <string name="version_name">"Versión "</string>
 </resources>

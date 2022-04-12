@@ -71,7 +71,6 @@ public class DialogCardFragment extends DialogFragment {
     @Override
     public void onStart() {
         super.onStart();
-        ConstraintLayout parentConstraint = Objects.requireNonNull(getDialog()).findViewById(R.id.parentConstraint);
         //Objects.requireNonNull(getDialog()).getWindow().setLayout(ConstraintLayout.LayoutParams.MATCH_PARENT, ConstraintLayout.LayoutParams.MATCH_PARENT);
     }
 
@@ -89,7 +88,7 @@ public class DialogCardFragment extends DialogFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.dialog_card_item, container, false);
+        rootView = inflater.inflate(R.layout.item_definition_card, container, false);
         findViewsByIds();
 
         return rootView;

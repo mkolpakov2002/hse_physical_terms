@@ -81,7 +81,9 @@ public class App extends Application {
         } else if(mainLanguage.equals(languages[3][1])){
             locale = new Locale(languages[3][2]);
         } else if(mainLanguage.equals(languages[4][1])){
-            locale = new Locale(languages[3][2]);
+            locale = new Locale(languages[4][2]);
+        } else if(mainLanguage.equals(languages[5][1])){
+            locale = new Locale(languages[5][2]);
         } else {
             locale = new Locale(languages[0][2]);
         }

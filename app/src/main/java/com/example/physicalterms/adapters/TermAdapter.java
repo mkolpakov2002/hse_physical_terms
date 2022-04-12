@@ -4,48 +4,50 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.daquexian.flexiblerichtextview.FlexibleRichTextView;
 import com.example.physicalterms.R;
-import com.example.physicalterms.api.FormulaRow;
 import com.example.physicalterms.api.TermRow;
 import com.google.android.material.card.MaterialCardView;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class TermAdapter extends RecyclerView.Adapter<TermAdapter.ViewHolder> {
+public class TermAdapter extends RecyclerView.Adapter<TermAdapter.ViewHolder> implements Filterable {
     private List<TermRow> mData;
     private LayoutInflater mInflater;
     private ItemClickListener mClickListener;
+    private List<TermRow> filterableList;
 
     // data is passed into the constructor
     public TermAdapter(Context context, List<TermRow> data) {
         this.mInflater = LayoutInflater.from(context);
-        this.mData = data;
+        this.mData = filterableList = data;
     }
 
     // inflates the row layout from xml when needed
     @NonNull
     @Override
     public TermAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = mInflater.inflate(R.layout.term_item, parent, false);
+        View view = mInflater.inflate(R.layout.item_term, parent, false);
         return new ViewHolder(view);
     }
 
     // binds the data to the TextView in each row
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        TermRow current = mData.get(position);
+        TermRow current = filterableList.get(position);
 
         holder.termNameTextView.setText(current.getNameLang());
         holder.termNameRusTextView.setText(current.getNameRus());
 
-        if(mData.get(position).isExpanded()){
+        if(filterableList.get(position).isExpanded()){
             holder.termNameRusTextView.setVisibility(View.VISIBLE);
             holder.parentLayout.setCardElevation(0);
         } else {
@@ -74,7 +76,52 @@ public class TermAdapter extends RecyclerView.Adapter<TermAdapter.ViewHolder> {
     // total number of rows
     @Override
     public int getItemCount() {
-        return mData.size();
+        return filterableList.size();
+    }
+
+    @Override
+    public Filter getFilter() {
+        return new Filter() {
+            @Override
+            protected FilterResults performFiltering(CharSequence charSequence) {
+                FilterResults filterResults = new FilterResults();
+
+                if(charSequence == null || charSequence.length() == 0){
+                    filterResults.count = mData.size();
+                    filterResults.values = mData;
+                    for(TermRow userModel: mData){
+                        userModel.setExpanded(false);
+                    }
+                    filterableList = mData;
+
+                } else {
+                    String searchChr = charSequence.toString().toLowerCase();
+
+                    List<TermRow> resultData = new ArrayList<>();
+
+                    for(TermRow userModel: mData){
+                        if(userModel.getNameRus().toLowerCase().contains(searchChr.toLowerCase())
+                                || userModel.getNameLang().toLowerCase().contains(searchChr.toLowerCase())){
+                            userModel.setExpanded(true);
+                            resultData.add(userModel);
+                        }
+                    }
+                    filterResults.count = resultData.size();
+                    filterResults.values = resultData;
+
+                }
+
+                return filterResults;
+            }
+
+            @Override
+            protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
+
+                filterableList = (List<TermRow>) filterResults.values;
+                notifyDataSetChanged();
+
+            }
+        };
     }
 
     // stores and recycles views as they are scrolled off screen
@@ -95,11 +142,11 @@ public class TermAdapter extends RecyclerView.Adapter<TermAdapter.ViewHolder> {
         public void onClick(View view) {
             //if (mClickListener != null) mClickListener.onItemClick(view);
             int clicked = getBindingAdapterPosition();
-            if(!mData.get(clicked).isExpanded()){
-                mData.get(clicked).setExpanded(true);
+            if(!filterableList.get(clicked).isExpanded()){
+                filterableList.get(clicked).setExpanded(true);
                 getBindingAdapter().notifyItemChanged(clicked, true);
             } else {
-                mData.get(clicked).setExpanded(false);
+                filterableList.get(clicked).setExpanded(false);
                 getBindingAdapter().notifyItemChanged(clicked, false);
             }
         }
@@ -121,8 +168,8 @@ public class TermAdapter extends RecyclerView.Adapter<TermAdapter.ViewHolder> {
     }
 
     public void setData(List<TermRow> newData){
-        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new TermDiffUtilCallback(mData, newData), true);
-        this.mData = newData;
+        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new TermDiffUtilCallback(filterableList, newData), true);
+        this.mData = filterableList = newData;
         diffResult.dispatchUpdatesTo(this);
     }
 }

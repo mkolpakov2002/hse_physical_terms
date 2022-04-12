@@ -4,6 +4,8 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -11,39 +13,49 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.daquexian.flexiblerichtextview.FlexibleRichTextView;
+import com.daquexian.flexiblerichtextview.LaTeXtView;
 import com.example.physicalterms.R;
 
 import com.example.physicalterms.api.DefinitionRow;
 import com.example.physicalterms.api.FormulaRow;
 import com.google.android.material.card.MaterialCardView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
 
-public class FormulaAdapter extends RecyclerView.Adapter<FormulaAdapter.ViewHolder> {
+public class FormulaAdapter extends RecyclerView.Adapter<FormulaAdapter.ViewHolder> implements Filterable {
     private List<FormulaRow> mData;
     private LayoutInflater mInflater;
     private ItemClickListener mClickListener;
+    private List<FormulaRow> filterableList;
+    private boolean isListMode = true;
 
     // data is passed into the constructor
-    public FormulaAdapter(Context context, List<FormulaRow> data) {
+    public FormulaAdapter(Context context, List<FormulaRow> data, boolean isListMode) {
         this.mInflater = LayoutInflater.from(context);
-        this.mData = data;
+        this.mData = filterableList = data;
+        this.isListMode = isListMode;
     }
 
     // inflates the row layout from xml when needed
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = mInflater.inflate(R.layout.formula_item, parent, false);
+        View view;
+        if(isListMode){
+            view = mInflater.inflate(R.layout.item_formula, parent, false);
+        } else {
+            view = mInflater.inflate(R.layout.item_formula_card, parent, false);
+        }
         return new ViewHolder(view);
     }
 
     // binds the data to the TextView in each row
     @Override
     public void onBindViewHolder(FormulaAdapter.ViewHolder holder, int position) {
-        FormulaRow current = mData.get(position);
+        FormulaRow current = filterableList.get(position);
 
         holder.formulaNameTextView.setText(current.getNameLang());
         holder.formulaNameRusTextView.setText(current.getNameRus());
@@ -52,17 +64,27 @@ public class FormulaAdapter extends RecyclerView.Adapter<FormulaAdapter.ViewHold
         holder.commentRusTextView.setText(current.getCommentRus());
         holder.sectionTextView.setText(current.getSection());
 
-        if(mData.get(position).isExpanded()){
-            holder.valueTextView.setVisibility(View.VISIBLE);
-            holder.commentTextView.setVisibility(View.VISIBLE);
-            holder.commentRusTextView.setVisibility(View.VISIBLE);
-            holder.parentLayout.setCardElevation(0);
-        } else {
-            holder.valueTextView.setVisibility(View.GONE);
-            holder.commentTextView.setVisibility(View.GONE);
-            holder.commentRusTextView.setVisibility(View.GONE);
-            holder.parentLayout.setCardElevation(8);
+        if(isListMode){
+            if(filterableList.get(position).isExpanded()){
+                holder.valueTextView.setVisibility(View.VISIBLE);
+                holder.commentTextView.setVisibility(View.VISIBLE);
+                holder.commentRusTextView.setVisibility(View.VISIBLE);
+                holder.parentLayout.setCardElevation(0);
+            } else {
+                holder.valueTextView.setVisibility(View.GONE);
+                holder.commentTextView.setVisibility(View.GONE);
+                holder.commentRusTextView.setVisibility(View.GONE);
+                holder.parentLayout.setCardElevation(8);
+            }
         }
+    }
+
+    List<FormulaRow> getFiltered(){
+        return filterableList;
+    }
+
+    public void setListMode(boolean listMode) {
+        isListMode = listMode;
     }
 
     @Override
@@ -89,7 +111,55 @@ public class FormulaAdapter extends RecyclerView.Adapter<FormulaAdapter.ViewHold
     // total number of rows
     @Override
     public int getItemCount() {
-        return mData.size();
+        return filterableList.size();
+    }
+
+    @Override
+    public Filter getFilter() {
+        return new Filter() {
+            @Override
+            protected FilterResults performFiltering(CharSequence charSequence) {
+                FilterResults filterResults = new FilterResults();
+
+                if(charSequence == null || charSequence.length() == 0){
+                    filterResults.count = mData.size();
+                    filterResults.values = mData;
+                    for(FormulaRow userModel: mData){
+                        userModel.setExpanded(false);
+                    }
+                    filterableList = mData;
+
+                } else {
+                    String searchChr = charSequence.toString().toLowerCase();
+
+                    List<FormulaRow> resultData = new ArrayList<>();
+
+                    for(FormulaRow userModel: mData){
+                        if(userModel.getValue().toLowerCase().contains(searchChr.toLowerCase())
+                                || userModel.getCommentRus().toLowerCase().contains(searchChr.toLowerCase())
+                                || userModel.getCommentLang().toLowerCase().contains(searchChr.toLowerCase())
+                                || userModel.getNameRus().toLowerCase().contains(searchChr.toLowerCase())
+                                || userModel.getNameLang().toLowerCase().contains(searchChr.toLowerCase())){
+                            userModel.setExpanded(true);
+                            resultData.add(userModel);
+                        }
+                    }
+                    filterResults.count = resultData.size();
+                    filterResults.values = resultData;
+
+                }
+
+                return filterResults;
+            }
+
+            @Override
+            protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
+
+                filterableList = (List<FormulaRow>) filterResults.values;
+                notifyDataSetChanged();
+
+            }
+        };
     }
 
     // stores and recycles views as they are scrolled off screen
@@ -107,6 +177,7 @@ public class FormulaAdapter extends RecyclerView.Adapter<FormulaAdapter.ViewHold
             formulaNameTextView = itemView.findViewById(R.id.formulaItemNameText);
             formulaNameRusTextView = itemView.findViewById(R.id.formulaItemNameRusText);
             valueTextView = itemView.findViewById(R.id.formulaItemValueText);
+
             commentTextView = itemView.findViewById(R.id.formulaItemCommentText);
             commentRusTextView = itemView.findViewById(R.id.formulaItemCommentRusText);
             parentLayout = (MaterialCardView) itemView;
@@ -122,19 +193,30 @@ public class FormulaAdapter extends RecyclerView.Adapter<FormulaAdapter.ViewHold
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (mClickListener != null) mClickListener.onItemClick(view);
+                    if(isListMode){
+                        int clicked = getBindingAdapterPosition();
+                        if(!filterableList.get(clicked).isExpanded()){
+                            filterableList.get(clicked).setExpanded(true);
+                            getBindingAdapter().notifyItemChanged(clicked, true);
+                        } else {
+                            filterableList.get(clicked).setExpanded(false);
+                            getBindingAdapter().notifyItemChanged(clicked, false);
+                        }
+                    }
                 }
             });
             itemView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View view) {
-                    int clicked = getBindingAdapterPosition();
-                    if(!mData.get(clicked).isExpanded()){
-                        mData.get(clicked).setExpanded(true);
-                        getBindingAdapter().notifyItemChanged(clicked, true);
-                    } else {
-                        mData.get(clicked).setExpanded(false);
-                        getBindingAdapter().notifyItemChanged(clicked, false);
+                    if(isListMode){
+                        int clicked = getBindingAdapterPosition();
+                        if(!filterableList.get(clicked).isExpanded()){
+                            filterableList.get(clicked).setExpanded(true);
+                            getBindingAdapter().notifyItemChanged(clicked, true);
+                        } else {
+                            filterableList.get(clicked).setExpanded(false);
+                            getBindingAdapter().notifyItemChanged(clicked, false);
+                        }
                     }
                     return true;
                 }
@@ -159,8 +241,8 @@ public class FormulaAdapter extends RecyclerView.Adapter<FormulaAdapter.ViewHold
     }
 
     public void setData(List<FormulaRow> newData){
-        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new FormulaDiffUtilCallback(mData, newData), true);
-        this.mData = newData;
+        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new FormulaDiffUtilCallback(filterableList, newData), true);
+        this.mData = filterableList = newData;
         diffResult.dispatchUpdatesTo(this);
     }
 }

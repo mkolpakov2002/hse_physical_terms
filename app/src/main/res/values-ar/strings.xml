@@ -15,4 +15,7 @@
     <string name="task_list">قائمة المهام</string>
     <string name="formula_list">قائمة الصيغ</string>
     <string name="connection_error">خطأ في الاتصال ، حاول لاحقا...</string>
+    <string name="app_description">مرحبا بك في تطبيق المصطلحات المادية الذي أنشأه طلاب الصحة والسلامة والبيئة. هنا يمكنك تعلم اللغات بسهولة!</string>
+    <string name="connect_dev">تواصل معنا</string>
+    <string name="version_name">"الإصدار "</string>
 </resources>

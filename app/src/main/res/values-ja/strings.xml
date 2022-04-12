@@ -15,4 +15,7 @@
     <string name="select_language_for_learning">学習のための言語を選択します。</string>
     <string name="greeting_title">こんにちは! &#128400;</string>
     <string name="connection_error">接続エラー、後で試してみてください。..</string>
+    <string name="app_description">HSEの学生によって作成された物理的な用語アプリへようこそ。 ここでは、簡単に言語を学ぶことができます！</string>
+    <string name="connect_dev">私達と接続して下さい</string>
+    <string name="version_name">"バージョン "</string>
 </resources>

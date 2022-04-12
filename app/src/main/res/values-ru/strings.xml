@@ -15,4 +15,7 @@
     <string name="formulas">Формулы</string>
     <string name="definitions">Определения</string>
     <string name="connection_error">Ошибка подключения, повторите попытку позже...</string>
+    <string name="app_description">Добро пожаловать в приложение \"Физические термины\", созданное студентами НИУ ВШЭ. Здесь вы можете легко изучать языки!</string>
+    <string name="connect_dev">Свяжитесь с нами</string>
+    <string name="version_name">"Версия "</string>
 </resources>

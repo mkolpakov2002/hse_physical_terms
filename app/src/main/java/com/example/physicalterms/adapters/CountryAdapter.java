@@ -8,12 +8,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.physicalterms.Country;
 import com.example.physicalterms.R;
-import com.example.physicalterms.api.FormulaRow;
 
 import java.util.List;
 
@@ -33,7 +31,7 @@ public class CountryAdapter extends RecyclerView.Adapter<CountryAdapter.ViewHold
     @NonNull
     @Override
     public CountryAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = mInflater.inflate(R.layout.country_item, parent, false);
+        View view = mInflater.inflate(R.layout.item_country, parent, false);
         return new ViewHolder(view);
     }
 

@@ -2,8 +2,10 @@ package com.example.physicalterms.fragments;
 
 import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
 
+import android.content.Context;
 import android.os.Bundle;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
@@ -13,6 +15,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -20,7 +23,6 @@ import com.example.physicalterms.ApiService;
 import com.example.physicalterms.App;
 import com.example.physicalterms.R;
 import com.example.physicalterms.adapters.TaskAdapter;
-import com.example.physicalterms.api.FormulaRow;
 import com.example.physicalterms.api.TaskRow;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.snackbar.Snackbar;
@@ -54,6 +56,7 @@ public class TaskFragment extends Fragment implements TaskAdapter.ItemClickListe
     RecyclerView definitionList;
     TaskAdapter adapter;
     private SwipeRefreshLayout swipeRefreshLayout;
+    androidx.appcompat.widget.SearchView searchView;
 
     public TaskFragment() {
         // Required empty public constructor
@@ -98,8 +101,31 @@ public class TaskFragment extends Fragment implements TaskAdapter.ItemClickListe
         materialToolbar = view.findViewById(R.id.toolbar_task);
 
         materialToolbar.setTitle(getString(R.string.tasks));
-        materialToolbar.setBackgroundColor(getResources().getColor(R.color.hse_purple));
-        materialToolbar.setTitleTextColor(getResources().getColor(R.color.white));
+        //materialToolbar.setBackgroundColor(getResources().getColor(R.color.hse_purple));
+        //materialToolbar.setTitleTextColor(getResources().getColor(R.color.white));
+        materialToolbar.getMenu().clear();
+        materialToolbar.inflateMenu(R.menu.item_mode_menu);
+        materialToolbar.setOnMenuItemClickListener(this::onOptionsItemSelected);
+        MenuItem menuItem = materialToolbar.getMenu().findItem(R.id.search_device);
+        searchView = (androidx.appcompat.widget.SearchView) menuItem.getActionView();
+        searchView.setMaxWidth(Integer.MAX_VALUE);
+        // изменение цвета иконки поиска на белый
+//        ImageView icon = searchView.findViewById(R.id.);
+//        icon.setColorFilter(getResources().getColor(R.color.white));
+        // методы при взаимодействии со строкой поиска
+        searchView.setOnQueryTextListener(new androidx.appcompat.widget.SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                //запускается, когда будет нажата кнопка поиска
+                return false;
+            }
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                //вызывается после ввода пользователем каждого символа в текстовом поле
+                adapter.getFilter().filter(newText);
+                return true;
+            }
+        });
 
         definitionList = view.findViewById(R.id.taskList);
         swipeRefreshLayout = view.findViewById(R.id.taskSwipeRefreshLayout);
@@ -179,6 +205,27 @@ public class TaskFragment extends Fragment implements TaskAdapter.ItemClickListe
                     }
                 })
                 .show();
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                if (!searchView.isIconified()) {
+                    //если открыта строка поиска, сворачиваем её
+                    searchView.setIconified(true);
+                    materialToolbar.collapseActionView();
+                } else {
+                    this.setEnabled(false);
+                    requireActivity().onBackPressed();
+                }
+            }
+
+        };
+        requireActivity().getOnBackPressedDispatcher().addCallback(this, callback);
     }
 
 }

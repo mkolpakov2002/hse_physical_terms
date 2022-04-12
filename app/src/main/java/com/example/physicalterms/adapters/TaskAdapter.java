@@ -4,6 +4,8 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -11,34 +13,36 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.physicalterms.R;
-import com.example.physicalterms.api.FormulaRow;
 import com.example.physicalterms.api.TaskRow;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder>{
+public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> implements Filterable {
     private List<TaskRow> mData;
     private LayoutInflater mInflater;
     private ItemClickListener mClickListener;
+    private List<TaskRow> filterableList;
+    private TaskAdapter adapter = this;
 
     // data is passed into the constructor
     public TaskAdapter(Context context, List<TaskRow> data) {
         this.mInflater = LayoutInflater.from(context);
-        this.mData = data;
+        this.mData = filterableList = data;
     }
 
     // inflates the row layout from xml when needed
     @NonNull
     @Override
     public TaskAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = mInflater.inflate(R.layout.task_item, parent, false);
+        View view = mInflater.inflate(R.layout.item_task, parent, false);
         return new ViewHolder(view);
     }
 
     // binds the data to the TextView in each row
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        TaskRow current = mData.get(position);
+        TaskRow current = filterableList.get(position);
         holder.taskItemTextView.setText(current.getText());
         holder.taskItemAnswersView.setText(current.getAnswers().toString());
         holder.taskItemRightAnswerView.setText(current.getRightAnswer());
@@ -49,7 +53,46 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder>{
     // total number of rows
     @Override
     public int getItemCount() {
-        return mData.size();
+        return filterableList.size();
+    }
+
+    @Override
+    public Filter getFilter() {
+        return new Filter() {
+            @Override
+            protected FilterResults performFiltering(CharSequence charSequence) {
+                FilterResults filterResults = new FilterResults();
+
+                if(charSequence == null || charSequence.length() == 0){
+                    filterResults.count = mData.size();
+                    filterResults.values = mData;
+                    filterableList = mData;
+
+                } else {
+                    String searchChr = charSequence.toString().toLowerCase();
+
+                    List<TaskRow> resultData = new ArrayList<>();
+                    for(TaskRow userModel: mData){
+                        if(userModel.getText().toLowerCase().contains(searchChr.toLowerCase())){
+                            resultData.add(userModel);
+                        }
+                    }
+                    filterResults.count = resultData.size();
+                    filterResults.values = resultData;
+
+                }
+
+                return filterResults;
+            }
+
+            @Override
+            protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
+                DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new TaskDiffUtilCallback(filterableList, (List<TaskRow>) filterResults.values), true);
+                filterableList = (List<TaskRow>) filterResults.values;
+                diffResult.dispatchUpdatesTo(adapter);
+
+            }
+        };
     }
 
     // stores and recycles views as they are scrolled off screen
@@ -90,7 +133,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder>{
 
     // convenience method for getting data at click position
     TaskRow getItem(int id) {
-        return mData.get(id);
+        return filterableList.get(id);
     }
 
     // allows clicks events to be caught
@@ -104,8 +147,8 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder>{
     }
 
     public void setData(List<TaskRow> newData){
-        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new TaskDiffUtilCallback(mData, newData), true);
-        this.mData = newData;
+        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new TaskDiffUtilCallback(filterableList, newData), true);
+        this.mData = filterableList = newData;
         diffResult.dispatchUpdatesTo(this);
     }
 }

@@ -15,4 +15,7 @@
     <string name="formulas">Formulas</string>
     <string name="definitions">Definitions</string>
     <string name="connection_error">Connection error, try later...</string>
+    <string name="app_description">Welcome to physical terms app created by HSE students. Here you can learn languages easily!</string>
+    <string name="connect_dev">Connect with us</string>
+    <string name="version_name">"Version "</string>
 </resources>

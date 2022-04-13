@@ -188,8 +188,34 @@ public class TermFragment extends Fragment implements SwipeRefreshLayout.OnRefre
      */
     @Override
     public void onRefresh() {
+        if (!searchView.isIconified()) {
+            //если открыта строка поиска, сворачиваем её
+            searchView.setIconified(true);
+            materialToolbar.collapseActionView();
+        }
         swipeRefreshLayout.setRefreshing(true);
         downloadData();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (!searchView.isIconified()) {
+            //если открыта строка поиска, сворачиваем её
+            searchView.setIconified(true);
+            materialToolbar.collapseActionView();
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (!searchView.isIconified()) {
+            //если открыта строка поиска, сворачиваем её
+            searchView.setIconified(true);
+            materialToolbar.collapseActionView();
+        }
+        onRefresh();
     }
 
     @Override

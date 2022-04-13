@@ -122,8 +122,8 @@ public class DefinitionAdapter extends RecyclerView.Adapter<DefinitionAdapter.Vi
                     for(DefinitionRow userModel: mData){
                         userModel.setExpanded(false);
                     }
-                    filterableList = mData;
-
+                    filterResults.count = mData.size();
+                    filterResults.values = mData;
                 } else {
                     String searchChr = charSequence.toString().toLowerCase();
 
@@ -134,8 +134,9 @@ public class DefinitionAdapter extends RecyclerView.Adapter<DefinitionAdapter.Vi
                         || userModel.getValueRus().toLowerCase().contains(searchChr.toLowerCase())
                         || userModel.getNameRus().toLowerCase().contains(searchChr.toLowerCase())
                         || userModel.getNameLang().toLowerCase().contains(searchChr.toLowerCase())){
-                            userModel.setExpanded(true);
-                            resultData.add(userModel);
+                            DefinitionRow copy = new DefinitionRow(userModel);
+                            copy.setExpanded(true);
+                            resultData.add(copy);
                         }
                     }
                     filterResults.count = resultData.size();
@@ -148,10 +149,7 @@ public class DefinitionAdapter extends RecyclerView.Adapter<DefinitionAdapter.Vi
 
             @Override
             protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
-
-                filterableList = (List<DefinitionRow>) filterResults.values;
-                notifyDataSetChanged();
-
+                showSearchData((List<DefinitionRow>) filterResults.values);
             }
         };
     }
@@ -229,9 +227,18 @@ public class DefinitionAdapter extends RecyclerView.Adapter<DefinitionAdapter.Vi
         return mData.get(id);
     }
 
-    public void setData(List<DefinitionRow> newData){
+    public void updateAdapterData(List<DefinitionRow> newData){
         DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new DefinitionDiffUtilCallback(filterableList, newData), true);
         this.mData = filterableList = newData;
+        for (DefinitionRow def: mData){
+            def.setExpanded(false);
+        }
+        diffResult.dispatchUpdatesTo(this);
+    }
+
+    public void showSearchData(List<DefinitionRow> newData){
+        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new DefinitionDiffUtilCallback(filterableList, newData), true);
+        filterableList = newData;
         diffResult.dispatchUpdatesTo(this);
     }
 }

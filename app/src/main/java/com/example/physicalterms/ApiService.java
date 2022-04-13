@@ -14,18 +14,6 @@ import retrofit2.http.Path;
 
 public interface ApiService {
 
-    @GET("/definitions/get")
-    Call<List<DefinitionRow>> getDefinitionList();
-
-    @GET("/formulas/get")
-    Call<List<FormulaRow>> getFormulaList();
-
-    @GET("/tasks/get")
-    Call<List<TaskRow>> getTaskList();
-
-    @GET("/terms/get")
-    Call<List<TermRow>> getTermList();
-
     @GET("/definitions/getByParams/{lang}/{section}")
     Call<List<DefinitionRow>> getDefinitionListByLang(@Path("lang") String langCodeName, @Path("section") String sectionName);
 
@@ -34,4 +22,7 @@ public interface ApiService {
 
     @GET("/terms/getByParams/{lang}/{section}")
     Call<List<TermRow>> getTermsListByLang(@Path("lang") String langCodeName, @Path("section") String sectionName);
+
+    @GET("/tasks/template/getByParams/{lang}/{section}")
+    Call<List<TaskRow>> getTasksListByLang(@Path("lang") String langCodeName, @Path("section") String sectionName);
 }

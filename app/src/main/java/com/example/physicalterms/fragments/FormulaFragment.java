@@ -10,7 +10,6 @@ import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.core.view.MenuItemCompat;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -22,16 +21,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.ImageView;
 
 import com.dingmouren.layoutmanagergroup.skidright.SkidRightLayoutManager;
 import com.dingmouren.layoutmanagergroup.slide.ItemTouchHelperCallback;
 import com.example.physicalterms.ApiService;
 import com.example.physicalterms.App;
 import com.example.physicalterms.R;
-import com.example.physicalterms.adapters.DefinitionAdapter;
 import com.example.physicalterms.adapters.FormulaAdapter;
-import com.example.physicalterms.api.DefinitionRow;
 import com.example.physicalterms.api.FormulaRow;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.snackbar.Snackbar;
@@ -166,9 +162,12 @@ public class FormulaFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 hideKeyboard(requireContext(), searchView);
                 MenuItemCompat.collapseActionView(menuItem);
                 searchView.setIconified(true);
-                adapter.setData(result);
+                adapter.updateAdapterData(result);
             }
             if(item.getItemId() == R.id.changeModeToCard){
+                if(menuItem.isVisible()){
+                    menuItem.setVisible(false);
+                }
                 FormulaAdapter adapter = new FormulaAdapter(requireContext(), result, false);
                 adapter.setListMode(false);
                 ItemTouchHelperCallback mItemTouchHelperCallback = new ItemTouchHelperCallback(adapter, result);
@@ -185,6 +184,9 @@ public class FormulaFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 return true;
             }
             if(item.getItemId() == R.id.changeModeToList){
+                if(!menuItem.isVisible()){
+                    menuItem.setVisible(true);
+                }
                 FormulaAdapter adapter = new FormulaAdapter(requireContext(), result, false);
                 adapter.setListMode(true);
                 definitionList.setOnFlingListener(null);
@@ -208,7 +210,7 @@ public class FormulaFragment extends Fragment implements SwipeRefreshLayout.OnRe
             public void onResponse(@NonNull Call<List<FormulaRow>> call, @NonNull Response<List<FormulaRow>> response) {
                 if (response.body() != null) {
                     result = response.body();
-                    adapter.setData(result);
+                    adapter.updateAdapterData(result);
                     App.getDatabase().getFormulaRowDao().deleteAll();
                     App.getDatabase().getFormulaRowDao().insertAll(result);
                 } else {
@@ -217,7 +219,7 @@ public class FormulaFragment extends Fragment implements SwipeRefreshLayout.OnRe
                     List<FormulaRow> saved = App.getDatabase().getFormulaRowDao().getAll();
                     if(saved.size()>0){
                         result = saved;
-                        adapter.setData(saved);
+                        adapter.updateAdapterData(saved);
                     }
                     showSnackBar(getString(R.string.connection_error));
                 }
@@ -230,7 +232,7 @@ public class FormulaFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 List<FormulaRow> saved = App.getDatabase().getFormulaRowDao().getAll();
                 if(saved.size()>0){
                     result = saved;
-                    adapter.setData(saved);
+                    adapter.updateAdapterData(saved);
                 }
                 showSnackBar(getString(R.string.connection_error));
                 swipeRefreshLayout.setRefreshing(false);
@@ -252,8 +254,34 @@ public class FormulaFragment extends Fragment implements SwipeRefreshLayout.OnRe
      */
     @Override
     public void onRefresh() {
+        if (!searchView.isIconified()) {
+            //если открыта строка поиска, сворачиваем её
+            searchView.setIconified(true);
+            materialToolbar.collapseActionView();
+        }
         swipeRefreshLayout.setRefreshing(true);
         downloadData();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (!searchView.isIconified()) {
+            //если открыта строка поиска, сворачиваем её
+            searchView.setIconified(true);
+            materialToolbar.collapseActionView();
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (!searchView.isIconified()) {
+            //если открыта строка поиска, сворачиваем её
+            searchView.setIconified(true);
+            materialToolbar.collapseActionView();
+        }
+        onRefresh();
     }
 
     @Override

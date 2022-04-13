@@ -104,7 +104,7 @@ public class TaskFragment extends Fragment implements TaskAdapter.ItemClickListe
         //materialToolbar.setBackgroundColor(getResources().getColor(R.color.hse_purple));
         //materialToolbar.setTitleTextColor(getResources().getColor(R.color.white));
         materialToolbar.getMenu().clear();
-        materialToolbar.inflateMenu(R.menu.item_mode_menu);
+        materialToolbar.inflateMenu(R.menu.search_menu);
         materialToolbar.setOnMenuItemClickListener(this::onOptionsItemSelected);
         MenuItem menuItem = materialToolbar.getMenu().findItem(R.id.search_device);
         searchView = (androidx.appcompat.widget.SearchView) menuItem.getActionView();
@@ -147,7 +147,7 @@ public class TaskFragment extends Fragment implements TaskAdapter.ItemClickListe
     void downloadData(){
         ApiService apiService = App.getApiService();
 
-        Call<List<TaskRow>> call = apiService.getTaskList();
+        Call<List<TaskRow>> call = apiService.getTasksListByLang(App.getLearningLanguage(), "all");
         call.enqueue(new Callback<List<TaskRow>>() {
             @Override
             public void onResponse(@NonNull Call<List<TaskRow>> call, @NonNull Response<List<TaskRow>> response) {
@@ -160,6 +160,7 @@ public class TaskFragment extends Fragment implements TaskAdapter.ItemClickListe
                     String s = "No objects";
                     Log.d(TAG, s);
                     List<TaskRow> saved = App.getDatabase().getTaskRowDao().getAll();
+                    result = saved;
                     if(saved.size()>0){
                         adapter.setData(saved);
                     }
@@ -172,6 +173,7 @@ public class TaskFragment extends Fragment implements TaskAdapter.ItemClickListe
             public void onFailure(@NonNull Call<List<TaskRow>> call, @NonNull Throwable t) {
                 Log.e(TAG, t.toString());
                 List<TaskRow> saved = App.getDatabase().getTaskRowDao().getAll();
+                result = saved;
                 if(saved.size()>0){
                     adapter.setData(saved);
                 }
@@ -186,8 +188,34 @@ public class TaskFragment extends Fragment implements TaskAdapter.ItemClickListe
      */
     @Override
     public void onRefresh() {
+        if (!searchView.isIconified()) {
+            //если открыта строка поиска, сворачиваем её
+            searchView.setIconified(true);
+            materialToolbar.collapseActionView();
+        }
         swipeRefreshLayout.setRefreshing(true);
         downloadData();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (!searchView.isIconified()) {
+            //если открыта строка поиска, сворачиваем её
+            searchView.setIconified(true);
+            materialToolbar.collapseActionView();
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (!searchView.isIconified()) {
+            //если открыта строка поиска, сворачиваем её
+            searchView.setIconified(true);
+            materialToolbar.collapseActionView();
+        }
+        onRefresh();
     }
 
 
@@ -226,6 +254,16 @@ public class TaskFragment extends Fragment implements TaskAdapter.ItemClickListe
 
         };
         requireActivity().getOnBackPressedDispatcher().addCallback(this, callback);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.search_device) {
+            // открытие строки поиска
+            Log.d(TAG, "открытие строки поиска");
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
 }

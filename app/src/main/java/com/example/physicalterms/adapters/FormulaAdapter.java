@@ -127,8 +127,8 @@ public class FormulaAdapter extends RecyclerView.Adapter<FormulaAdapter.ViewHold
                     for(FormulaRow userModel: mData){
                         userModel.setExpanded(false);
                     }
-                    filterableList = mData;
-
+                    filterResults.count = mData.size();
+                    filterResults.values = mData;
                 } else {
                     String searchChr = charSequence.toString().toLowerCase();
 
@@ -136,12 +136,13 @@ public class FormulaAdapter extends RecyclerView.Adapter<FormulaAdapter.ViewHold
 
                     for(FormulaRow userModel: mData){
                         if(userModel.getValue().toLowerCase().contains(searchChr.toLowerCase())
-                                || userModel.getCommentRus().toLowerCase().contains(searchChr.toLowerCase())
                                 || userModel.getCommentLang().toLowerCase().contains(searchChr.toLowerCase())
+                                || userModel.getCommentRus().toLowerCase().contains(searchChr.toLowerCase())
                                 || userModel.getNameRus().toLowerCase().contains(searchChr.toLowerCase())
                                 || userModel.getNameLang().toLowerCase().contains(searchChr.toLowerCase())){
-                            userModel.setExpanded(true);
-                            resultData.add(userModel);
+                            FormulaRow copy = new FormulaRow(userModel);
+                            copy.setExpanded(true);
+                            resultData.add(copy);
                         }
                     }
                     filterResults.count = resultData.size();
@@ -154,10 +155,7 @@ public class FormulaAdapter extends RecyclerView.Adapter<FormulaAdapter.ViewHold
 
             @Override
             protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
-
-                filterableList = (List<FormulaRow>) filterResults.values;
-                notifyDataSetChanged();
-
+                showSearchData((List<FormulaRow>) filterResults.values);
             }
         };
     }
@@ -240,9 +238,15 @@ public class FormulaAdapter extends RecyclerView.Adapter<FormulaAdapter.ViewHold
         return mData.get(id);
     }
 
-    public void setData(List<FormulaRow> newData){
+    public void updateAdapterData(List<FormulaRow> newData){
         DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new FormulaDiffUtilCallback(filterableList, newData), true);
         this.mData = filterableList = newData;
+        diffResult.dispatchUpdatesTo(this);
+    }
+
+    public void showSearchData(List<FormulaRow> newData){
+        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new FormulaDiffUtilCallback(filterableList, newData), true);
+        filterableList = newData;
         diffResult.dispatchUpdatesTo(this);
     }
 }

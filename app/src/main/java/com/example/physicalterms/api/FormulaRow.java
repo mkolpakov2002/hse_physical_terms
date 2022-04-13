@@ -71,6 +71,18 @@ public class FormulaRow {
         this.section = section;
     }
 
+    public FormulaRow(FormulaRow copying) {
+        this.id = copying.getId();
+        this.nameRus = copying.getNameRus();
+        this.nameLang = copying.getNameLang();
+        this.value = copying.getValue();
+        this.commentRus = copying.getCommentRus();
+        this.commentLang = copying.getCommentLang();
+        this.language = copying.getLanguage();
+        this.section = copying.getSection();
+
+    }
+
     public Integer getId() {
         return id;
     }

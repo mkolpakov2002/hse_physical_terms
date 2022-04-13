@@ -10,7 +10,6 @@ import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.core.view.MenuItemCompat;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -164,9 +163,12 @@ public class DefinitionFragment extends Fragment implements SwipeRefreshLayout.O
                 hideKeyboard(requireContext(), searchView);
                 MenuItemCompat.collapseActionView(menuItem);
                 searchView.setIconified(true);
-                adapter.setData(result);
+                adapter.updateAdapterData(result);
             }
             if(item.getItemId() == R.id.changeModeToCard){
+                if(menuItem.isVisible()){
+                    menuItem.setVisible(false);
+                }
                 DefinitionAdapter adapter = new DefinitionAdapter(requireContext(), result, false);
                 adapter.setListMode(false);
                 ItemTouchHelperCallback mItemTouchHelperCallback = new ItemTouchHelperCallback(adapter, result);
@@ -183,6 +185,9 @@ public class DefinitionFragment extends Fragment implements SwipeRefreshLayout.O
                 return true;
             }
             if(item.getItemId() == R.id.changeModeToList){
+                if(!menuItem.isVisible()){
+                    menuItem.setVisible(true);
+                }
                 DefinitionAdapter adapter = new DefinitionAdapter(requireContext(), result, false);
                 adapter.setListMode(true);
                 definitionList.setOnFlingListener(null);
@@ -206,7 +211,7 @@ public class DefinitionFragment extends Fragment implements SwipeRefreshLayout.O
             public void onResponse(@NonNull Call<List<DefinitionRow>> call, @NonNull Response<List<DefinitionRow>> response) {
                 if (response.body() != null) {
                     result = response.body();
-                    adapter.setData(result);
+                    adapter.updateAdapterData(result);
                     App.getDatabase().getDefinitionRowDao().deleteAll();
                     App.getDatabase().getDefinitionRowDao().insertAll(result);
                 } else {
@@ -215,7 +220,7 @@ public class DefinitionFragment extends Fragment implements SwipeRefreshLayout.O
                     List<DefinitionRow> saved = App.getDatabase().getDefinitionRowDao().getAll();
                     if(saved.size()>0){
                         result = saved;
-                        adapter.setData(saved);
+                        adapter.updateAdapterData(saved);
                     }
                     showSnackBar(getString(R.string.connection_error));
                 }
@@ -228,7 +233,7 @@ public class DefinitionFragment extends Fragment implements SwipeRefreshLayout.O
                 List<DefinitionRow> saved = App.getDatabase().getDefinitionRowDao().getAll();
                 if(saved.size()>0){
                     result = saved;
-                    adapter.setData(saved);
+                    adapter.updateAdapterData(saved);
                 }
                 showSnackBar(getString(R.string.connection_error));
                 swipeRefreshLayout.setRefreshing(false);
@@ -250,8 +255,34 @@ public class DefinitionFragment extends Fragment implements SwipeRefreshLayout.O
      */
     @Override
     public void onRefresh() {
+        if (!searchView.isIconified()) {
+            //если открыта строка поиска, сворачиваем её
+            searchView.setIconified(true);
+            materialToolbar.collapseActionView();
+        }
         swipeRefreshLayout.setRefreshing(true);
         downloadData();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (!searchView.isIconified()) {
+            //если открыта строка поиска, сворачиваем её
+            searchView.setIconified(true);
+            materialToolbar.collapseActionView();
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (!searchView.isIconified()) {
+            //если открыта строка поиска, сворачиваем её
+            searchView.setIconified(true);
+            materialToolbar.collapseActionView();
+        }
+        onRefresh();
     }
 
     @Override

@@ -66,6 +66,17 @@ public class DefinitionRow {
         this.section = section;
     }
 
+    public DefinitionRow(DefinitionRow copying) {
+        this.id = copying.getId();
+        this.nameRus = copying.getNameRus();
+        this.nameLang = copying.getNameLang();
+        this.valueRus = copying.getValueRus();
+        this.valueLang = copying.getValueLang();
+        this.language = copying.getLanguage();
+        this.section = copying.getSection();
+        this.isExpanded = copying.isExpanded();
+    }
+
     public Integer getId() {
         return id;
     }

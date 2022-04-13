@@ -47,89 +47,85 @@ public class WelcomeActivity extends AppCompatActivity implements CountryAdapter
         super.onCreate(savedInstanceState);
         App.setLocale(this);
         WelcomeActivity ma = this;
-        if(!App.isIsLanguageSelected()) {
-            setContentView(R.layout.activity_welcome);
-            RecyclerView countryListView = findViewById(R.id.country_recycler);
-            RecyclerViewLayoutManager
-                    = new LinearLayoutManager(
-                    getApplicationContext());
+        setContentView(R.layout.activity_welcome);
+        RecyclerView countryListView = findViewById(R.id.country_recycler);
+        RecyclerViewLayoutManager
+                = new LinearLayoutManager(
+                getApplicationContext());
 
-            // Set LayoutManager on Recycler View
-            countryListView.setLayoutManager(
-                    RecyclerViewLayoutManager);
+        // Set LayoutManager on Recycler View
+        countryListView.setLayoutManager(
+                RecyclerViewLayoutManager);
 
-            Resources resources = ma.getResources();
+        Resources resources = ma.getResources();
 
-            Country eng = new Country(0, languages[0][0], ResourcesCompat.getDrawable(resources, resources.getIdentifier(languages[0][1], "drawable",
-                    ma.getPackageName()), null));
-            Country arab = new Country(0, languages[1][0], ResourcesCompat.getDrawable(resources, resources.getIdentifier(languages[1][1], "drawable",
-                    ma.getPackageName()), null));
-            Country es = new Country(0, languages[2][0], ResourcesCompat.getDrawable(resources, resources.getIdentifier(languages[2][1], "drawable",
-                    ma.getPackageName()), null));
-            Country jap = new Country(0, languages[3][0], ResourcesCompat.getDrawable(resources, resources.getIdentifier(languages[3][1], "drawable",
-                    ma.getPackageName()), null));
-            Country fr = new Country(0, languages[4][0], ResourcesCompat.getDrawable(resources, resources.getIdentifier(languages[4][1], "drawable",
-                    ma.getPackageName()), null));
-            countries = new ArrayList<>();
-            countries.add(eng);
-            countries.add(arab);
-            countries.add(es);
-            countries.add(jap);
-            countries.add(fr);
-            CountryAdapter adapter = new CountryAdapter(ma, countries);
+        Country eng = new Country(0, languages[0][0], ResourcesCompat.getDrawable(resources, resources.getIdentifier(languages[0][1], "drawable",
+                ma.getPackageName()), null));
+        Country arab = new Country(0, languages[1][0], ResourcesCompat.getDrawable(resources, resources.getIdentifier(languages[1][1], "drawable",
+                ma.getPackageName()), null));
+        Country es = new Country(0, languages[2][0], ResourcesCompat.getDrawable(resources, resources.getIdentifier(languages[2][1], "drawable",
+                ma.getPackageName()), null));
+        Country jap = new Country(0, languages[3][0], ResourcesCompat.getDrawable(resources, resources.getIdentifier(languages[3][1], "drawable",
+                ma.getPackageName()), null));
+        Country fr = new Country(0, languages[4][0], ResourcesCompat.getDrawable(resources, resources.getIdentifier(languages[4][1], "drawable",
+                ma.getPackageName()), null));
+        countries = new ArrayList<>();
+        countries.add(eng);
+        countries.add(arab);
+        countries.add(es);
+        countries.add(jap);
+        countries.add(fr);
+        CountryAdapter adapter = new CountryAdapter(ma, countries);
 
-            // Set Horizontal Layout Manager
-            // for Recycler view
-            HorizontalLayout
-                    = new LinearLayoutManager(
-                    WelcomeActivity.this,
-                    LinearLayoutManager.HORIZONTAL,
-                    false);
+        // Set Horizontal Layout Manager
+        // for Recycler view
+        HorizontalLayout
+                = new LinearLayoutManager(
+                WelcomeActivity.this,
+                LinearLayoutManager.HORIZONTAL,
+                false);
 
-            countryListView.setLayoutManager(HorizontalLayout);
-            adapter.setClickListener(this);
-            countryListView.setAdapter(adapter);
+        countryListView.setLayoutManager(HorizontalLayout);
+        adapter.setClickListener(this);
+        countryListView.setAdapter(adapter);
 
-            DisplayMetrics metrics = new DisplayMetrics();
-            getWindowManager().getDefaultDisplay().getMetrics(metrics);
-            Resources r = getResources();
-            Configuration c = r.getConfiguration();
-            String[] loc = r.getAssets().getLocales();
-            for (int i = 0; i < loc.length; i++) {
-                Log.d("LOCALE", i + ": " + loc[i]);
-                c.locale = new Locale(loc[i]);
-                Resources res = new Resources(getAssets(), metrics, c);
-                String s1 = res.getString(R.string.greeting_title);
-                if(!greetingsArray.contains(s1))
-                    greetingsArray.add(s1);
-            }
-
-            textSwitcher = (TextSwitcher) findViewById(R.id.greetingTextSwitcher);
-            Animation slideInLeftAnimation = AnimationUtils.loadAnimation(this,
-                    android.R.anim.slide_in_left);
-            Animation slideOutRightAnimation = AnimationUtils.loadAnimation(this,
-                    android.R.anim.slide_out_right);
-            textSwitcher.setInAnimation(slideInLeftAnimation);
-            textSwitcher.setOutAnimation(slideOutRightAnimation);
-
-            textSwitcher.setFactory(new ViewSwitcher.ViewFactory() {
-                @Override
-                public View makeView() {
-                    TextView textView = new TextView(ma);
-                    textView.setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_TitleLarge);
-                    textView.setGravity(Gravity.CENTER_HORIZONTAL);
-                    return textView;
-                }
-            });
-            textSwitcher.setText(greetingsArray.get(index));
-            if(greetingsArray.size()>index+1){
-                index++;
-            } else {
-                index = 0;
-            }
-
+        DisplayMetrics metrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(metrics);
+        Resources r = getResources();
+        Configuration c = r.getConfiguration();
+        String[] loc = r.getAssets().getLocales();
+        for (int i = 0; i < loc.length; i++) {
+            Log.d("LOCALE", i + ": " + loc[i]);
+            c.locale = new Locale(loc[i]);
+            Resources res = new Resources(getAssets(), metrics, c);
+            String s1 = res.getString(R.string.greeting_title);
+            if(!greetingsArray.contains(s1))
+                greetingsArray.add(s1);
         }
 
+        textSwitcher = (TextSwitcher) findViewById(R.id.greetingTextSwitcher);
+        Animation slideInLeftAnimation = AnimationUtils.loadAnimation(this,
+                android.R.anim.slide_in_left);
+        Animation slideOutRightAnimation = AnimationUtils.loadAnimation(this,
+                android.R.anim.slide_out_right);
+        textSwitcher.setInAnimation(slideInLeftAnimation);
+        textSwitcher.setOutAnimation(slideOutRightAnimation);
+
+        textSwitcher.setFactory(new ViewSwitcher.ViewFactory() {
+            @Override
+            public View makeView() {
+                TextView textView = new TextView(ma);
+                textView.setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_TitleLarge);
+                textView.setGravity(Gravity.CENTER_HORIZONTAL);
+                return textView;
+            }
+        });
+        textSwitcher.setText(greetingsArray.get(index));
+        if(greetingsArray.size()>index+1){
+            index++;
+        } else {
+            index = 0;
+        }
     }
 
     @Override

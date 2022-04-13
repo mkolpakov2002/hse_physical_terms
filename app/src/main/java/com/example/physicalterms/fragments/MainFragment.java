@@ -3,6 +3,7 @@ package com.example.physicalterms.fragments;
 import static com.example.physicalterms.Constants.DEV_EMAIL;
 import static com.example.physicalterms.Constants.DEV_SITE;
 
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Color;
@@ -29,7 +30,9 @@ import android.widget.ViewSwitcher;
 
 import com.example.physicalterms.App;
 import com.example.physicalterms.BuildConfig;
+import com.example.physicalterms.MainActivity;
 import com.example.physicalterms.R;
+import com.example.physicalterms.WelcomeActivity;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
 
@@ -68,11 +71,21 @@ public class MainFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         Element versionElement = new Element();
         versionElement.setTitle(getString(R.string.version_name) + BuildConfig.VERSION_NAME);
+        Element changeLearningLanguage = new Element();
+        changeLearningLanguage.setTitle("Изменить язык обучения");
+        changeLearningLanguage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(requireActivity(), WelcomeActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK));
+                requireActivity().finish();
+            }
+        });
         return new AboutPage(requireContext())
                 .isRTL(false)
                 .setDescription(getString(R.string.app_description))
                 .setImage(R.drawable.miem)
                 .addItem(versionElement)
+                .addItem(changeLearningLanguage)
                 .addGroup(getString(R.string.connect_dev))
                 .addEmail(DEV_EMAIL)
                 .addWebsite(DEV_SITE)
